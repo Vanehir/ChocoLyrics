@@ -18,7 +18,6 @@ class Song {
   });
 
   factory Song.fromJson(Map<String, dynamic> json) {
-    // Aggiunto null check e valori di default
     return Song(
       id: json['id'] ?? '',
       name: json['name'] ?? '',
