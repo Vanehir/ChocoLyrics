@@ -1,12 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 
-class TabBar extends StatelessWidget {
-  const TabBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoTabBar(
+CupertinoTabBar customTabBar = CupertinoTabBar(
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(CupertinoIcons.home),
@@ -22,5 +17,3 @@ class TabBar extends StatelessWidget {
         ),
       ],
     );
-  }
-}
