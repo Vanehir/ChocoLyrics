@@ -1,7 +1,7 @@
 {
-    "tabBar": {
-        "home": "Home",
-        "Search": "Search",
-        "favorites": "Favorite"
-    }
+  "tabBar": {
+    "home": "Home",
+    "search": "Search",
+    "favorites": "Favorite"
+  }
 }
