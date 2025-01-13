@@ -25,7 +25,7 @@ class ExploreScreen extends StatelessWidget {
             children: [
               // Explore Title
               Text(
-                'explore.title'.tr(),
+                tr('explore.title'),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: darkBrown,
