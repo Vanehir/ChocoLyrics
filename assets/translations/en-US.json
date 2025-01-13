@@ -1,12 +1,11 @@
 {
-    "tabBar": {
-      "home": "Home",
-      "search": "Search",
-      "favorites": "Favorite"
-    },
-    "explore": {
-      "title": "Explore",
-      "search": "Search"
-    }
+  "tabBar": {
+    "home": "Home",
+    "search": "Explore",
+    "favorites": "Favorite"
+  },
+  "explore": {
+    "title": "Explore",
+    "search": "Search"
   }
-  
+}
