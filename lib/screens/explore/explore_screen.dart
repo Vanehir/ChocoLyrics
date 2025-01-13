@@ -10,86 +10,102 @@ class ExploreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-        decoration: const BoxDecoration(color: beige),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(
-              width: double.infinity,
-              child: Text(
+      child: SafeArea(
+        // Add SafeArea to prevent overlap with system UI
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+          decoration: const BoxDecoration(color: beige),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Explore Title
+              const Text(
                 'Explore',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: darkBrown,
                   fontSize: 35,
-                  fontFamily: 'Calibri', //TODO: Change font
+                  fontFamily: 'Calibri',
                   fontWeight: FontWeight.w700,
                   height: 0.46,
                   letterSpacing: 0.50,
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // SEARCH BAR //
-            CustomSearchBar(
-              controller: TextEditingController(),
-              onChanged: (value) {
-              // TODO: Implement search functionality
-              },
-            ),
-            const SizedBox(height: 20),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(10),
-                child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: List.generate(8, (index) {
-                  return const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5),
-                  child: FilterButton(),
-                  );
-                }),
-                ),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 340,
-                    padding: const EdgeInsets.all(9),
-                    decoration: ShapeDecoration(
-                      color: Color(0xFF2A0505),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        //TODO: Change to SongRow when API is ready
-                        SongRowPlaceHolder(imageUrl: 'https://i.scdn.co/image/ab67616d0000b27333ea9fb3fd69bca55a015229', title: 'Merry-go-round', artist: 'Joe Hisaishi'),
-                ]),
-                  ),
-                ],
+              // Search Bar
+              CustomSearchBar(
+                controller: TextEditingController(),
+                onChanged: (value) {
+                  // TODO: Implement search functionality
+                },
               ),
-            ),
-          ],
+              const SizedBox(height: 20),
+
+              // Filter Grid
+              SizedBox(
+                child: GridView.count(
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: 2,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: List.generate(9, (index) {
+                    return const FilterButton();
+                  }),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Song List
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      // TODO: Change when API is ready
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          child: Column(
+                            // Add this Column widget
+                            children: [
+                              const SongRowPlaceHolder(
+                                imageUrl:
+                                    'https://i.scdn.co/image/ab67616d0000b27333ea9fb3fd69bca55a015229',
+                                title: 'Merry-go-round',
+                                artist: 'Joe Hisaishi',
+                              ),
+                              const SizedBox(height: 5),
+                              const SongRowPlaceHolder(
+                                imageUrl:
+                                    'https://i.scdn.co/image/ab67616d0000b27333ea9fb3fd69bca55a015229',
+                                title: 'Merry-go-round',
+                                artist: 'Joe Hisaishi',
+                              ),
+                              const SizedBox(height: 5),
+                              const SongRowPlaceHolder(
+                                imageUrl:
+                                    'https://i.scdn.co/image/ab67616d0000b27333ea9fb3fd69bca55a015229',
+                                title: 'Merry-go-round',
+                                artist: 'Joe Hisaishi',
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
