@@ -1,4 +1,6 @@
 import 'package:choco_lyrics/themes/colors/colors.dart';
+import 'package:choco_lyrics/ui/components/song_card_big.dart';
+import 'package:choco_lyrics/ui/components/song_card_small.dart';
 import 'package:choco_lyrics/ui/components/song_row_placeholder.dart';
 import 'package:choco_lyrics/ui/search/filter_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,7 +13,6 @@ class ExploreScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: SafeArea(
-        // Add SafeArea to prevent overlap with system UI
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
@@ -46,7 +47,12 @@ class ExploreScreen extends StatelessWidget {
               const SizedBox(height: 20),
 
               // Filter Grid
-              SizedBox(
+              Container(
+                decoration: BoxDecoration(
+                  // TODO: Fa cagare
+                  color: brown,
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: GridView.count(
                   crossAxisCount: 3,
                   mainAxisSpacing: 10,
@@ -90,8 +96,13 @@ class ExploreScreen extends StatelessWidget {
                                 artist: 'Joe Hisaishi',
                               ),
                               const SizedBox(height: 5),
-                              const SongRowPlaceHolder(
-                                imageUrl:
+                              const SongCardSmall(imageUrl:
+                                    'https://i.scdn.co/image/ab67616d0000b27333ea9fb3fd69bca55a015229',
+                                title: 'Merry-go-round',
+                                artist: 'Joe Hisaishi',
+                              ),
+                              const SizedBox(height: 5),
+                              const SongCardBig(imageUrl:
                                     'https://i.scdn.co/image/ab67616d0000b27333ea9fb3fd69bca55a015229',
                                 title: 'Merry-go-round',
                                 artist: 'Joe Hisaishi',

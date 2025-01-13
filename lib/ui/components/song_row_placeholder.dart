@@ -1,3 +1,4 @@
+import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:flutter/cupertino.dart';
 
 class SongRowPlaceHolder extends StatelessWidget {
@@ -17,7 +18,7 @@ class SongRowPlaceHolder extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       decoration: ShapeDecoration(
-        color: const Color(0xFF2A0505),
+        color: darkBrown,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -29,6 +30,14 @@ class SongRowPlaceHolder extends StatelessWidget {
             width: 65,
             height: 64,
             decoration: BoxDecoration(
+              boxShadow: const [
+                BoxShadow(
+                  color: darkBrownShadow,
+                  blurRadius: 4,
+                  offset: Offset(4, 4),
+                  spreadRadius: 1,
+                )
+              ],
               image: DecorationImage(
                 image: NetworkImage(imageUrl),
                 fit: BoxFit.cover,
@@ -46,7 +55,7 @@ class SongRowPlaceHolder extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                    color: Color(0xFFF0DDA2),
+                    color: beige,
                     fontSize: 16,
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.w700,
@@ -57,7 +66,7 @@ class SongRowPlaceHolder extends StatelessWidget {
                 Text(
                   artist,
                   style: const TextStyle(
-                    color: Color(0xFFCA8D6D),
+                    color: darkBeige,
                     fontSize: 13,
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.w700,
@@ -76,7 +85,7 @@ class SongRowPlaceHolder extends StatelessWidget {
               child: const Icon(
                 CupertinoIcons.add_circled,
                 size: 35,
-                color: Color(0xFFF0DDA2),
+                color: beige,
               ),
             ),
           ),
