@@ -3,5 +3,9 @@
     "home": "Home",
     "search": "Search",
     "favorites": "Favorite"
+  },
+  "exploreScreen": {
+    "title": "Explore",
+    "search": "Search"
   }
 }

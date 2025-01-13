@@ -1,24 +1,27 @@
-import 'package:flutter/material.dart';
+import 'package:choco_lyrics/themes/colors/colors.dart';
+import 'package:flutter/cupertino.dart';
 
 class FilterButton extends StatelessWidget {
-  const FilterButton({super.key});
+  final String filterText;
+  const FilterButton({
+    super.key,
+    required this.filterText,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 64.67,
       padding: const EdgeInsets.symmetric(horizontal: 19.69, vertical: 22.83),
-      decoration: ShapeDecoration(
-        color: const Color(0xFF2A0505),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(7.87),
-        ),
+      decoration: BoxDecoration(
+        color: darkBrown,
+        borderRadius: BorderRadius.circular(7.87),
       ),
-      child: const Center(
+      child: Center(
         child: Text(
-          'Filter',
-          style: TextStyle(
-            color: Color(0xFFF0DDA2),
+          filterText,
+          style: const TextStyle(
+            color: beige,
             fontSize: 15.75,
             fontFamily: 'Roboto', // TODO: Use a custom font
             fontWeight: FontWeight.w500,

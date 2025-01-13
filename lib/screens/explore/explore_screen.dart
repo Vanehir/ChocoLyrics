@@ -5,6 +5,7 @@ import 'package:choco_lyrics/ui/components/song_row_placeholder.dart';
 import 'package:choco_lyrics/ui/search/filter_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:choco_lyrics/ui/search/search_bar.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ExploreScreen extends StatelessWidget {
   const ExploreScreen({super.key});
@@ -23,8 +24,8 @@ class ExploreScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Explore Title
-              const Text(
-                'Explore',
+              Text(
+                'explore.title'.tr(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: darkBrown,
@@ -48,11 +49,6 @@ class ExploreScreen extends StatelessWidget {
 
               // Filter Grid
               Container(
-                decoration: BoxDecoration(
-                  // TODO: Fa cagare
-                  color: brown,
-                  borderRadius: BorderRadius.circular(10),
-                ),
                 child: GridView.count(
                   crossAxisCount: 3,
                   mainAxisSpacing: 10,
@@ -60,9 +56,17 @@ class ExploreScreen extends StatelessWidget {
                   childAspectRatio: 2,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  children: List.generate(9, (index) {
-                    return const FilterButton();
-                  }),
+                  children: const [
+                    FilterButton(filterText: 'Track'),
+                    FilterButton(filterText: 'Album'),
+                    FilterButton(filterText: 'Artist'),
+                    FilterButton(filterText: 'Pop'),
+                    FilterButton(filterText: 'Rock'),
+                    FilterButton(filterText: 'Classic'),
+                    FilterButton(filterText: 'Hip/Hop'),
+                    FilterButton(filterText: 'EDM'),
+                    FilterButton(filterText: 'Metal'),
+                  ],
                 ),
               ),
 
@@ -96,13 +100,15 @@ class ExploreScreen extends StatelessWidget {
                                 artist: 'Joe Hisaishi',
                               ),
                               const SizedBox(height: 5),
-                              const SongCardSmall(imageUrl:
+                              const SongCardSmall(
+                                imageUrl:
                                     'https://i.scdn.co/image/ab67616d0000b27333ea9fb3fd69bca55a015229',
                                 title: 'Merry-go-round',
                                 artist: 'Joe Hisaishi',
                               ),
                               const SizedBox(height: 5),
-                              const SongCardBig(imageUrl:
+                              const SongCardBig(
+                                imageUrl:
                                     'https://i.scdn.co/image/ab67616d0000b27333ea9fb3fd69bca55a015229',
                                 title: 'Merry-go-round',
                                 artist: 'Joe Hisaishi',

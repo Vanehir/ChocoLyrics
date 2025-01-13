@@ -37,7 +37,7 @@ class SongRow extends StatelessWidget {
                 Text(
                   song.name,
                   style: const TextStyle(
-                    color: Color(0xFFF0DDA2),
+                    color: beige,
                     fontSize: 16,
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.w700,
