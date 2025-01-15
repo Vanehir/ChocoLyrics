@@ -1,4 +1,6 @@
 import 'package:choco_lyrics/core/secure_storage.dart';
+import 'package:choco_lyrics/data/models/album.dart';
+import 'package:choco_lyrics/data/models/artist.dart';
 import 'package:choco_lyrics/data/models/song.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_access_token.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_constants.dart';
@@ -22,30 +24,81 @@ class SpotifyRepository {
   }
   */
 
+  // get a playlist from Spotify by id
   Future<List<Song>> getPlaylist({required String idPlaylist}) async {
     try {
       await getSpotifyAccessToken.getAccessToken();
       String? token = await secureStorage.getItem(key: accessTokenKey);
       final response = await dio.get(
-        (playListUrl + idPlaylist),
+        '$playListUrl$idPlaylist',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
           },
         ),
       );
-      print('status code: ${response.statusCode}');
       if (response.statusCode == 200) {
-        final List<Song> songs = [];
-        for (var item in response.data['tracks']['items']) {
-          songs.add(Song.fromJson(item));
-        }
+        final songs =
+            ((response.data['tracks']['items'] as List<dynamic>?) ?? [])
+                .map((song) => Song.fromJson(song['track']))
+                .toList();
         return songs;
       } else {
         throw Exception('Failed to get playlist: ${response.statusMessage}');
       }
     } catch (e) {
       throw Exception('Failed to get playlist: $e');
+    }
+  }
+
+  // search from Spotify by track name, album name, artist name
+  Future<List<dynamic>> getItemFromSearch(
+      {required String query, required String queryParameter}) async {
+    try {
+      await getSpotifyAccessToken.getAccessToken();
+      String? token = await secureStorage.getItem(key: accessTokenKey);
+      final response = await dio.get(
+        '$searchUrl?q=$query&type=$queryParameter',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        return _getList(response: response, queryParameter: queryParameter);
+      } else {
+        throw Exception(
+            'Failed to get item from search: ${response.statusMessage}');
+      }
+    } catch (e) {
+      throw Exception('Failed to get item from search: $e');
+    }
+  }
+
+  List<dynamic> _getList(
+      {required Response<dynamic> response, String? queryParameter}) {
+    switch (queryParameter) {
+      case 'track':
+        final songs =
+            ((response.data['tracks']['items'] as List<dynamic>?) ?? [])
+                .map((song) => Song.fromJson(song))
+                .toList();
+        return songs;
+      case 'album':
+        final albums =
+            ((response.data['albums']['items'] as List<dynamic>?) ?? [])
+                .map((album) => Album.fromJson(album))
+                .toList();
+        return albums;
+      case 'artist':
+        final artists =
+            ((response.data['artists']['items'] as List<dynamic>?) ?? [])
+                .map((artist) => Artist.fromJson(artist))
+                .toList();
+        return artists;
+      default:
+        return [];
     }
   }
 }
