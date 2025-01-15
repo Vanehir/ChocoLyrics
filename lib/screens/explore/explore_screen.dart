@@ -13,12 +13,13 @@ class ExploreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      backgroundColor: beige,
       child: SafeArea(
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-          decoration: const BoxDecoration(color: beige),
+          // decoration: const BoxDecoration(color: beige),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
