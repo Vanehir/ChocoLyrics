@@ -1,3 +1,6 @@
+import 'package:choco_lyrics/data/models/playlist.dart';
+import 'package:choco_lyrics/data/repositories/spotify/spotify_constants.dart';
+import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
 import 'package:choco_lyrics/screens/tab_scaffold/tab_scaffold.dart';
 import 'package:choco_lyrics/themes/light_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -15,6 +18,12 @@ void main() async {
       child: MainApp(),
     ),
   );
+
+  final SpotifyRepository spotifyRepository = SpotifyRepository();
+  final Playlist playlist = await spotifyRepository.getPlaylist(idPlaylist: todayTopHits);
+  for (var track in playlist.tracks) {
+    debugPrint('track: ${track.name}');
+  }
 }
 
 class MainApp extends StatelessWidget {

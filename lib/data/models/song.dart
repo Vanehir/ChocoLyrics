@@ -1,4 +1,5 @@
 import 'package:choco_lyrics/data/models/artist.dart';
+import 'package:choco_lyrics/data/models/playlist.dart';
 
 class Song {
   final String id;
