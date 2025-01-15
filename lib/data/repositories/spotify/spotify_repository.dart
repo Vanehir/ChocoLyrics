@@ -24,13 +24,17 @@ class SpotifyRepository {
 
   Future<List<Song>> getPlaylist({required String idPlaylist}) async {
     try {
-      print('1');
       await getSpotifyAccessToken.getAccessToken();
-      print('2');
-      final response = await dio.get((playListUrl + idPlaylist),
-          options: Options(headers: {
-            'Authorization': 'Bearer $secureStorage.getItem(accessTokenKey)',
-          }));
+      String? token = await secureStorage.getItem(key: accessTokenKey);
+      final response = await dio.get(
+        (playListUrl + idPlaylist),
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+      print('status code: ${response.statusCode}');
       if (response.statusCode == 200) {
         final List<Song> songs = [];
         for (var item in response.data['tracks']['items']) {
@@ -43,13 +47,5 @@ class SpotifyRepository {
     } catch (e) {
       throw Exception('Failed to get playlist: $e');
     }
-  }
-}
-
-void main() async {
-  final spotifyRepository = SpotifyRepository();
-  final songs = await spotifyRepository.getPlaylist(idPlaylist: todayTopHits);
-  for (var song in songs) {
-    print(song.name);
   }
 }

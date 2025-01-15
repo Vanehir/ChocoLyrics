@@ -8,7 +8,6 @@ class GetSpotifyAccessToken {
   final SecureStorage secureStorage = SecureStorage();
 
   Future<void> getAccessToken() async {
-    print('SSUUSS');
     final response = await dio.post(
       tokenUrl,
       data: {'grant_type': 'client_credentials'},
@@ -30,12 +29,9 @@ class GetSpotifyAccessToken {
         },
       ),
     );
-    print("SSAASS");
     if (response.statusCode == 200 && response.data != null) {
-      print("SS00SS");
-      secureStorage.setItem(
+      await secureStorage.setItem(
           key: accessTokenKey, item: response.data[accessTokenKey]);
-      print('qua???');
     } else {
       throw Exception(
           'Failed to authenticate with Spotify: ${response.statusMessage}');
