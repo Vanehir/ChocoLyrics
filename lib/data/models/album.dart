@@ -26,4 +26,12 @@ class Album {
       totalTracks: json['total_tracks'] ?? 0,
     );
   }
+
+  @override
+  String toString() {
+    return 'Album: $name, \n'
+        'Artists: ${artists.map((artist) => artist.name).join(', ')}, \n'
+        'Total Tracks: $totalTracks, \n'
+        'Cover URL: $coverUrl\n';
+  }
 }
