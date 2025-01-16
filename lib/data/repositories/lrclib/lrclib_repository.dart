@@ -16,8 +16,6 @@ class LrcLibRepository {
           },
         ),
       );
-      print('url: $searchUrl $artistName $songName');
-      print('status code: ${response.statusCode}');
       if (response.statusCode == 200) {
         final lyrics = (response.data[0]['plainLyrics'] as String).split('\n');
         return lyrics;
