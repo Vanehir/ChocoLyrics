@@ -1,5 +1,6 @@
 import 'package:choco_lyrics/data/repositories/spotify/spotify_constants.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
+import 'package:choco_lyrics/screens/lyrics/lyrics_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:choco_lyrics/ui/navigation/components/song_card_big.dart';
 import 'package:choco_lyrics/ui/navigation/components/song_card_small.dart';
@@ -97,7 +98,14 @@ class HomeScreenState extends State<HomeScreen> {
                     child: SongCardBig(
                     imageUrl: song.albumCoverUrl,
                     title: song.name,
-                    artist: song.artists.map((artist) => artist.name).join(', '),
+                    artist: song.artists.map((artist) => artist.name).join(', '), onTap: () { 
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => LyricsScreen(song: song),
+                      ),
+                    );
+                     },
                     ),
                   );
                   },
@@ -152,6 +160,12 @@ class HomeScreenState extends State<HomeScreen> {
                           imageUrl: song.albumCoverUrl,
                           title: song.name,
                           artist: song.artists.map((artist) => artist.name).join(', '),
+                          onTap: () => Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => LyricsScreen(song: song),
+                      ),
+                    )
                         );
                       },
                     );
