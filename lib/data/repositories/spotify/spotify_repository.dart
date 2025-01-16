@@ -98,7 +98,12 @@ class SpotifyRepository {
                 .toList();
         return artists;
       default:
-        return [];
+        final songs =
+            ((response.data['tracks']['items']['track'] as List<dynamic>?) ??
+                    [])
+                .map((song) => Song.fromJson(song))
+                .toList();
+        return songs;
     }
   }
 }

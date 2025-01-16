@@ -1,26 +1,25 @@
 class Artist {
   final String name;
+  final String imageUrl;
   final List<String> genres;
-  final String spotifyUrl;
 
   Artist({
     required this.name,
+    required this.imageUrl,
     required this.genres,
-    required this.spotifyUrl,
   });
 
   factory Artist.fromJson(Map<String, dynamic> json) {
     return Artist(
       name: json['name'] ?? '',
+      imageUrl: json['images']?[0]?['url'] ?? '',
       genres: List<String>.from(json['genres'] ?? []),
-      spotifyUrl: json['external_urls']?['spotify'] ?? '',
     );
   }
 
   @override
   String toString() {
     return 'Artist: $name, \n'
-        'Genres: ${genres.join(', ')}, \n'
-        'Spotify URL: $spotifyUrl\n';
+        'Genres: ${genres.join(', ')}, \n';
   }
 }
