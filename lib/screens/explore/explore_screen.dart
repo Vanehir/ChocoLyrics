@@ -101,19 +101,6 @@ class ExploreScreen extends StatelessWidget {
                                 artist: 'Joe Hisaishi',
                               ),
                               const SizedBox(height: 5),
-                              const SongCardSmall(
-                                imageUrl:
-                                    'https://i.scdn.co/image/ab67616d0000b27333ea9fb3fd69bca55a015229',
-                                title: 'Merry-go-round',
-                                artist: 'Joe Hisaishi',
-                              ),
-                              const SizedBox(height: 5),
-                              const SongCardBig(
-                                imageUrl:
-                                    'https://i.scdn.co/image/ab67616d0000b27333ea9fb3fd69bca55a015229',
-                                title: 'Merry-go-round',
-                                artist: 'Joe Hisaishi',
-                              ),
                             ],
                           ),
                         ),
