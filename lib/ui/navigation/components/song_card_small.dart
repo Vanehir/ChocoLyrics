@@ -54,7 +54,7 @@ class SongCardSmall extends StatelessWidget {
                 title,
                 style: const TextStyle(
                   color: beige,
-                  fontSize: 11,
+                  fontSize: 16,
                   fontFamily: 'Roboto',
                   fontWeight: FontWeight.w700,
                 ),
@@ -66,7 +66,7 @@ class SongCardSmall extends StatelessWidget {
                 artist,
                 style: const TextStyle(
                   color: beige,
-                  fontSize: 9,
+                  fontSize: 12,
                   fontFamily: 'Roboto',
                   fontWeight: FontWeight.w400,
                 ),

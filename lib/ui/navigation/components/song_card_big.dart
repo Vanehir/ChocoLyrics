@@ -16,7 +16,7 @@ class SongCardBig extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: darkBrown,
         borderRadius: BorderRadius.circular(16),
