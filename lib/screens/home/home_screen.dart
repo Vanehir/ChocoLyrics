@@ -1,10 +1,8 @@
 import 'package:choco_lyrics/data/repositories/spotify/spotify_constants.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
-import 'package:choco_lyrics/ui/components/song_card_big.dart';
-import 'package:choco_lyrics/ui/components/song_card_small.dart';
-import 'package:choco_lyrics/screens/lyrics/lyrics_screen.dart';
-
+import 'package:choco_lyrics/ui/navigation/components/song_card_big.dart';
+import 'package:choco_lyrics/ui/navigation/components/song_card_small.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -92,33 +90,24 @@ class HomeScreenState extends State<HomeScreen> {
                 CarouselSlider.builder(
                   itemCount: topHits.length,
                   itemBuilder: (context, index, realIndex) {
-                    final song = topHits[index];
-                    return Container(
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 20.0), // Increased margin
-                      child: SongCardBig(
-                        imageUrl: song.albumCoverUrl,
-                        title: song.name,
-                        artist: song.artists.map((artist) => artist.name).join(', '),
-                        onTap: () {
-                          print('premuto');
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => LyricsScreen(song: song),
-                              ),
-                            );
-                        },
-                      ),
-                    );
+                  final song = topHits[index];
+                  return Container(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 20.0), // Increased margin
+                    child: SongCardBig(
+                    imageUrl: song.albumCoverUrl,
+                    title: song.name,
+                    artist: song.artists.map((artist) => artist.name).join(', '),
+                    ),
+                  );
                   },
                   options: CarouselOptions(
-                    height: 270.0,
-                    enlargeCenterPage: false,
-                    enableInfiniteScroll: true,
-                    autoPlayAnimationDuration: Duration(milliseconds: 800),
-                    viewportFraction: 0.4,
-                    padEnds: false,
+                  height: 270.0,
+                  enlargeCenterPage: false,
+                  enableInfiniteScroll: true,
+                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                  viewportFraction: 0.4,
+                  padEnds: false,
                   ),
                 ),
                 const SizedBox(height: 40),
@@ -163,14 +152,6 @@ class HomeScreenState extends State<HomeScreen> {
                           imageUrl: song.albumCoverUrl,
                           title: song.name,
                           artist: song.artists.map((artist) => artist.name).join(', '),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => LyricsScreen(song: song),
-                              ),
-                            );
-                          },
                         );
                       },
                     );
