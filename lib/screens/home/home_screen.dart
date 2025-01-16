@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               // Home Title
               Text(
-                tr('home.title'),
+                'home.title'.tr(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: darkBrown,
@@ -44,7 +44,7 @@ class HomeScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      tr('home.firstPlaylist'),
+                      'home.firstPlaylist'.tr(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: darkBrown,
@@ -94,7 +94,7 @@ class HomeScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      tr('home.secondPlaylist'),
+                      'home.secondPlaylist'.tr(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: darkBrown,
