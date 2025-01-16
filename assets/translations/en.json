@@ -3,5 +3,10 @@
     "home": "Home",
     "search": "Search",
     "favorites": "Favorite"
+  },
+  "home": {
+    "title": "Chocolyrics",
+    "description": "This is the home screen",
+    "firstPlaylist": "Today's top hits"
   }
 }
