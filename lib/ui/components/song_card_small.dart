@@ -5,12 +5,15 @@ class SongCardSmall extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String artist;
+    final VoidCallback? onTap;
+
 
   const SongCardSmall({
     super.key,
     required this.imageUrl,
     required this.title,
     required this.artist,
+    required this.onTap,
   });
 
   @override
