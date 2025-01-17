@@ -60,13 +60,7 @@ class ExploreScreen extends StatelessWidget {
                   children: const [
                     FilterButton(filterText: 'Track'),
                     FilterButton(filterText: 'Album'),
-                    FilterButton(filterText: 'Artist'),
-                    FilterButton(filterText: 'Pop'),
-                    FilterButton(filterText: 'Rock'),
-                    FilterButton(filterText: 'Classic'),
-                    FilterButton(filterText: 'Hip/Hop'),
-                    FilterButton(filterText: 'EDM'),
-                    FilterButton(filterText: 'Metal'),
+                    FilterButton(filterText: 'Artist')
                   ],
                 ),
               ),
@@ -80,40 +74,12 @@ class ExploreScreen extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
-                      // TODO: Change when API is ready
                       children: [
                         Container(
                           width: double.infinity,
                           child: Column(
-                            // Add this Column widget
                             children: [
-                              const SongRowPlaceHolder(
-                                imageUrl:
-                                    'https://i.scdn.co/image/ab67616d0000b27333ea9fb3fd69bca55a015229',
-                                title: 'Merry-go-round',
-                                artist: 'Joe Hisaishi',
-                              ),
-                              const SizedBox(height: 5),
-                              const SongRowPlaceHolder(
-                                imageUrl:
-                                    'https://i.scdn.co/image/ab67616d0000b27333ea9fb3fd69bca55a015229',
-                                title: 'Merry-go-round',
-                                artist: 'Joe Hisaishi',
-                              ),
-                              const SizedBox(height: 5),
-                              const SongCardSmall(
-                                imageUrl:
-                                    'https://i.scdn.co/image/ab67616d0000b27333ea9fb3fd69bca55a015229',
-                                title: 'Merry-go-round',
-                                artist: 'Joe Hisaishi',
-                              ),
-                              const SizedBox(height: 5),
-                              const SongCardBig(
-                                imageUrl:
-                                    'https://i.scdn.co/image/ab67616d0000b27333ea9fb3fd69bca55a015229',
-                                title: 'Merry-go-round',
-                                artist: 'Joe Hisaishi',
-                              ),
+                              // TODO: Put the fetched song list here
                             ],
                           ),
                         ),
