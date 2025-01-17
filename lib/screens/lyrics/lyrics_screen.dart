@@ -1,6 +1,8 @@
+import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:choco_lyrics/data/models/song.dart';
 import 'package:choco_lyrics/data/repositories/lrclib/lrclib_repository.dart';
+import 'package:flutter/material.dart';
 
 class LyricsScreen extends StatefulWidget {
   final Song song;
@@ -26,7 +28,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
   Future<void> _fetchLyrics() async {
     try {
       final lyrics = await _lrcLibRepository.getLyrics(
-        artistName: widget.song.artists.map((artist) => artist.name).join(', '),
+        artistName: widget.song.artists.map((artist) => artist.name).join(' '),
         songName: widget.song.name,
       );
       setState(() {
@@ -58,7 +60,19 @@ class _LyricsScreenState extends State<LyricsScreen> {
                         padding: const EdgeInsets.all(16.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: _lyrics!.map((line) => Text(line)).toList(),
+                            children: _lyrics!.map((line) => Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(line, 
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                height: 1.5,
+                              ),
+                              ),
+                                const Divider(color: darkBrownShadow, thickness: 0.5,),
+                            ],
+                            )).toList(),
                         ),
                       ),
       ),
