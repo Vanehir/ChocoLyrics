@@ -1,14 +1,47 @@
+import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
+import 'package:choco_lyrics/screens/lyrics/lyrics_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
-import 'package:choco_lyrics/ui/components/song_card_big.dart';
-import 'package:choco_lyrics/ui/components/song_card_small.dart';
-import 'package:choco_lyrics/ui/components/song_row_placeholder.dart';
 import 'package:choco_lyrics/ui/search/filter_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:choco_lyrics/ui/search/search_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:choco_lyrics/data/models/song.dart';
+import 'package:choco_lyrics/ui/components/song_row.dart';
 
-class ExploreScreen extends StatelessWidget {
+class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
+
+  @override
+  _ExploreScreenState createState() => _ExploreScreenState();
+}
+
+class _ExploreScreenState extends State<ExploreScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  List<Song> _songs = [];
+  bool _isLoading = false;
+
+  Future<void> _searchSongs(String query) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final spotifyRepository = SpotifyRepository();
+      final results = await spotifyRepository.getItemFromSearch(
+        query: query,
+        queryParameter: 'track',
+      );
+      setState(() {
+        _songs = results.cast<Song>();
+      });
+    } catch (e) {
+      // Handle error
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +52,6 @@ class ExploreScreen extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-          // decoration: const BoxDecoration(color: beige),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -41,9 +73,9 @@ class ExploreScreen extends StatelessWidget {
 
               // Search Bar
               CustomSearchBar(
-                controller: TextEditingController(),
+                controller: _searchController,
                 onChanged: (value) {
-                  // TODO: Implement search functionality
+                  _searchSongs(value);
                 },
               ),
               const SizedBox(height: 20),
@@ -69,24 +101,26 @@ class ExploreScreen extends StatelessWidget {
 
               // Song List
               Expanded(
-                child: SingleChildScrollView(
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          child: Column(
-                            children: [
-                              // TODO: Put the fetched song list here
-                            ],
-                          ),
+                child: _isLoading
+                    ? Center(child: CupertinoActivityIndicator())
+                    : SingleChildScrollView(
+                        child: Column(
+                          children: _songs
+                              .map((song) => SongRow(
+                                    song: song,
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                          builder: (context) =>
+                                              LyricsScreen(song: song),
+                                        ),
+                                      );
+                                    },
+                                  ))
+                              .toList(),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
               ),
             ],
           ),
