@@ -1,7 +1,6 @@
 import 'package:choco_lyrics/data/models/song.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 class SongRow extends StatelessWidget {
   final Song song;
@@ -66,7 +65,11 @@ class SongRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
-            const FlutterLogo(size: 35),
+            const Icon(
+              CupertinoIcons.add_circled,
+              size: 35,
+              color: beige,
+            ),
           ],
         ),
       ),

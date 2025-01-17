@@ -81,20 +81,18 @@ class _ExploreScreenState extends State<ExploreScreen> {
               const SizedBox(height: 20),
 
               // Filter Grid
-              Container(
-                child: GridView.count(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 2,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: const [
-                    FilterButton(filterText: 'Track'),
-                    FilterButton(filterText: 'Album'),
-                    FilterButton(filterText: 'Artist')
-                  ],
-                ),
+              GridView.count(
+                crossAxisCount: 3,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                childAspectRatio: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                children: const [
+                  FilterButton(filterText: 'Track'),
+                  FilterButton(filterText: 'Album'),
+                  FilterButton(filterText: 'Artist')
+                ],
               ),
 
               const SizedBox(height: 20),
@@ -106,17 +104,20 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     : SingleChildScrollView(
                         child: Column(
                           children: _songs
-                              .map((song) => SongRow(
-                                    song: song,
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        CupertinoPageRoute(
-                                          builder: (context) =>
-                                              LyricsScreen(song: song),
-                                        ),
-                                      );
-                                    },
+                              .map((song) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 10.0),
+                                    child: SongRow(
+                                      song: song,
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          CupertinoPageRoute(
+                                            builder: (context) =>
+                                                LyricsScreen(song: song),
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ))
                               .toList(),
                         ),
