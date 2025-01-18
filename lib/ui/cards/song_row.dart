@@ -32,7 +32,7 @@ class SongRow extends StatelessWidget {
               height: 64,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(song.albumCoverUrl),
+                  image: NetworkImage(song.album.coverUrl),
                   fit: BoxFit.fill,
                 ),
                 borderRadius: BorderRadius.circular(4.38),

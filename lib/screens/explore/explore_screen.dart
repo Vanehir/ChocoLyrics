@@ -25,35 +25,46 @@ class _ExploreScreenState extends State<ExploreScreen> {
   final TextEditingController _searchController = TextEditingController();
   List<dynamic> _items = [];
   bool _isLoading = false;
-  String _activeFilter = 'track';
+  String? _error;
+  SpotifySearchType _activeFilter = SpotifySearchType.track;
 
   Future<void> _searchItems(String query) async {
     if (query.isEmpty) return;
 
     setState(() {
       _isLoading = true;
+      _error = null;
+      _items = []; // Clear previous results
     });
 
     try {
       final spotifyRepository = SpotifyRepository();
+      print('Searching with filter: ${_activeFilter}');
       final results = await spotifyRepository.getItemFromSearch(
         query: query,
         queryParameter: _activeFilter,
       );
+      
+      print('Results received: ${results.length}');
+      if (results.isNotEmpty) {
+        print('First result type: ${results.first.runtimeType}');
+      }
+      
       setState(() {
         _items = results;
+        _isLoading = false;
       });
     } catch (e) {
       print('Search error: $e');
-      // You might want to show an error message to the user here
-    } finally {
       setState(() {
+        _error = 'Failed to load results. Please try again.';
         _isLoading = false;
       });
     }
   }
 
   Widget _buildItemRow(dynamic item) {
+    print('Building row for item type: ${item.runtimeType}');
     if (item is Song) {
       return SongRow(
         song: item,
@@ -81,7 +92,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
           );
         },
         onAddPressed: () {
-          // TODO: implement add to favorites
           print('Add album to favorites: ${item.name}');
         },
       );
@@ -97,15 +107,15 @@ class _ExploreScreenState extends State<ExploreScreen> {
           );
         },
         onAddPressed: () {
-          // TODO: implement add to favorites
           print('Add artist to favorites: ${item.name}');
         },
       );
     }
+    print('Unknown item type: ${item.runtimeType}');
     return const SizedBox.shrink();
   }
 
-  void _toggleFilter(String filter) {
+  void _toggleFilter(SpotifySearchType filter) {
     setState(() {
       _activeFilter = filter;
     });
@@ -120,112 +130,114 @@ class _ExploreScreenState extends State<ExploreScreen> {
       backgroundColor: beige,
       child: SafeArea(
         bottom: false,
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: beige,
-                  boxShadow: [
-                    BoxShadow(
-                      color: darkBrown.withOpacity(0.15),
-                      blurRadius: 10,
-                      offset: const Offset(0, 6),
+        child: Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: beige,
+                boxShadow: [
+                  BoxShadow(
+                    color: darkBrown.withOpacity(0.15),
+                    blurRadius: 10,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                children: [
+                  Text(
+                    tr('explore.title'),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: darkBrown,
+                      fontSize: 35,
+                      fontFamily: 'Calibri',
+                      fontWeight: FontWeight.w700,
+                      height: 0.46,
+                      letterSpacing: 0.50,
                     ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(15),
-                child: Column(
-                  children: [
-                    Text(
-                      tr('explore.title'),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: darkBrown,
-                        fontSize: 35,
-                        fontFamily: 'Calibri',
-                        fontWeight: FontWeight.w700,
-                        height: 0.46,
-                        letterSpacing: 0.50,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomSearchBar(
+                    controller: _searchController,
+                    onSubmitted: (value) {
+                      _searchItems(value);
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        child: FilterButton(
+                          filterText: 'Track',
+                          isActive: _activeFilter == SpotifySearchType.track,
+                          onTap: () => _toggleFilter(SpotifySearchType.track),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    CustomSearchBar(
-                      controller: _searchController,
-                      onSubmitted: (value) {
-                        _searchItems(value);
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                          child: FilterButton(
-                            filterText: 'Track',
-                            isActive: _activeFilter == 'track',
-                            onTap: () => _toggleFilter('track'),
-                          ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: FilterButton(
+                          filterText: 'Album',
+                          isActive: _activeFilter == SpotifySearchType.album,
+                          onTap: () => _toggleFilter(SpotifySearchType.album),
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: FilterButton(
-                            filterText: 'Album',
-                            isActive: _activeFilter == 'album',
-                            onTap: () => _toggleFilter('album'),
-                          ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: FilterButton(
+                          filterText: 'Artist',
+                          isActive: _activeFilter == SpotifySearchType.artist,
+                          onTap: () => _toggleFilter(SpotifySearchType.artist),
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: FilterButton(
-                            filterText: 'Artist',
-                            isActive: _activeFilter == 'artist',
-                            onTap: () => _toggleFilter('artist'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              Expanded(
-                child: _isLoading
-                    ? const Center(child: CupertinoActivityIndicator())
-                    : _items.isEmpty
-                        ? Center(
-                            child: Text(
-                              _searchController.text.isEmpty
-                                  ? tr('explore.search_prompt')
-                                  : tr('explore.no_results'),
-                              style: const TextStyle(
-                                color: darkBrown,
-                                fontSize: 16,
-                                fontFamily: 'Roboto',
+            ),
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CupertinoActivityIndicator())
+                  : _error != null
+                      ? Center(
+                          child: Text(
+                            _error!,
+                            style: const TextStyle(
+                              color: darkBrown,
+                              fontSize: 16,
+                            ),
+                          ),
+                        )
+                      : _items.isEmpty
+                          ? Center(
+                              child: Text(
+                                _searchController.text.isEmpty
+                                    ? 'Search for songs, albums, or artists'
+                                    : 'No results found',
+                                style: const TextStyle(
+                                  color: darkBrown,
+                                  fontSize: 16,
+                                ),
                               ),
+                            )
+                          : ListView.builder(
+                              padding: const EdgeInsets.only(
+                                left: 10,
+                                right: 10,
+                                bottom: 100,
+                              ),
+                              itemCount: _items.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 10.0),
+                                  child: _buildItemRow(_items[index]),
+                                );
+                              },
                             ),
-                          )
-                        : SingleChildScrollView(
-                            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 100,),
-                            
-                            child: Column(
-                              children: _items
-                                  .map((item) => Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 10.0),
-                                        child: _buildItemRow(item),
-                                      ))
-                                  .toList(),
-                                  
-                            ),
-                            
-                          ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

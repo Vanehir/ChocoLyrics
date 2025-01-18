@@ -1,23 +1,18 @@
 import 'package:choco_lyrics/data/models/album.dart';
 import 'package:choco_lyrics/data/models/artist.dart';
-
 class Song {
   final String id;
   final String name;
   final int durationMs;
   final List<Artist> artists;
   final Album album;
-  final String albumId;  // I added this field or the album screen wouldn't work
-
   Song({
     required this.id,
     required this.name,
     required this.durationMs,
     required this.artists,
     required this.album,
-    required this.albumId,  // I added this field or the album screen wouldn't work
   });
-
   factory Song.fromJson(Map<String, dynamic> json) {
     return Song(
       id: json['id'] ?? '',
@@ -27,17 +22,14 @@ class Song {
           .map((artist) => Artist.fromJson(artist))
           .toList(),
       album: Album.fromJson(json['album']),
-      albumId: json['album']?['id'] ?? '',  // I added this field or the album screen wouldn't work
     );
   }
-
   @override
   String toString() {
     return 'Song: $name, \n'
         'Artists: ${artists.map((artist) => artist.name).join(', ')}, \n'
         'Duration: $durationMs, \n'
         'Album: ${album.name}, \n'
-        'Album Cover: ${album.coverUrl}\n'
-        'Album ID: $albumId\n';
+        'Album Cover: ${album.coverUrl}\n';
   }
 }

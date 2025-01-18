@@ -8,6 +8,19 @@ import 'package:dio/dio.dart';
 
 enum SpotifySearchType { track, album, artist }
 
+extension SpotifySearchTypeExtension on SpotifySearchType {
+  String get value {
+    switch (this) {
+      case SpotifySearchType.track:
+        return 'track';
+      case SpotifySearchType.album:
+        return 'album';
+      case SpotifySearchType.artist:
+        return 'artist';
+    }
+  }
+}
+
 class SpotifyRepository {
   final Dio dio = Dio();
   final SecureStorage secureStorage = SecureStorage();
@@ -51,6 +64,7 @@ class SpotifyRepository {
     }
   }
 
+
   // search from Spotify by track name, album name, artist name
   Future<List<dynamic>> getItemFromSearch(
       {required String query,
@@ -58,8 +72,12 @@ class SpotifyRepository {
     try {
       await getSpotifyAccessToken.getAccessToken();
       String? token = await secureStorage.getItem(key: accessTokenKey);
+
+//
+      String type = queryParameter.toString().split('.').last;
+
       final response = await dio.get(
-        '$searchUrl?q=$query&type=$queryParameter',
+        '$searchUrl?q=$query&type=$type',
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',

@@ -29,32 +29,31 @@ class _AlbumScreenState extends State<AlbumScreen> {
   }
 
   Future<void> _loadSongs() async {
-    try {
-      final spotifyRepository = SpotifyRepository();
-      final searchQuery =
-          '${widget.album.artists.first.name} ${widget.album.name}';
-      final results = await spotifyRepository.getItemFromSearch(
-        query: searchQuery,
-        queryParameter: 'track',
-      );
+  try {
+    final spotifyRepository = SpotifyRepository();
+    final searchQuery = '${widget.album.artists.first.name} ${widget.album.name}';
+    final results = await spotifyRepository.getItemFromSearch(
+      query: searchQuery,
+      queryParameter: SpotifySearchType.track,
+    );
 
-      // Filter songs by matching the album ID
-      final albumSongs = results
-          .whereType<Song>()
-          .where((song) => song.albumId == widget.album.id)
-          .toList();
+    // Filter songs by matching the album name and artist
+    final albumSongs = results
+        .whereType<Song>()
+        .where((song) => song.album.name.toLowerCase() == widget.album.name.toLowerCase())
+        .toList();
 
-      setState(() {
-        _songs = albumSongs;
-        _isLoading = false;
-      });
-    } catch (e) {
-      print('Error loading songs: $e');
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    setState(() {
+      _songs = albumSongs;
+      _isLoading = false;
+    });
+  } catch (e) {
+    print('Error loading songs: $e');
+    setState(() {
+      _isLoading = false;
+    });
   }
+}
 
   @override
   Widget build(BuildContext context) {

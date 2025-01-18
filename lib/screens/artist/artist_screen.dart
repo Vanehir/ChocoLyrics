@@ -34,14 +34,14 @@ class _ArtistScreenState extends State<ArtistScreen> {
       final spotifyRepository = SpotifyRepository();
       final results = await spotifyRepository.getItemFromSearch(
         query: widget.artist.name,
-        queryParameter: 'track',
+        queryParameter: SpotifySearchType.track,
       );
 
       // Filter songs by matching the artist
       final artistSongs = results
           .whereType<Song>()
-          .where((song) => song.artists
-              .any((artist) => artist.name.toLowerCase() == widget.artist.name.toLowerCase()))
+          .where((song) => song.artists.any((artist) =>
+              artist.name.toLowerCase() == widget.artist.name.toLowerCase()))
           .take(maxSongs)
           .toList();
 

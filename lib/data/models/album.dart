@@ -1,12 +1,10 @@
 import 'package:choco_lyrics/data/models/artist.dart';
-
 class Album {
   final String id;
   final String name;
   final List<Artist> artists;
   final String coverUrl;
   final int totalTracks;
-
   Album({
     required this.id,
     required this.name,
@@ -14,7 +12,6 @@ class Album {
     required this.coverUrl,
     required this.totalTracks,
   });
-
   factory Album.fromJson(Map<String, dynamic> json) {
     return Album(
       id: json['id'] ?? '',
@@ -26,7 +23,6 @@ class Album {
       totalTracks: json['total_tracks'] ?? 0,
     );
   }
-
   @override
   String toString() {
     return 'Album: $name, \n'
