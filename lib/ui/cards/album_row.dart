@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:choco_lyrics/data/models/album.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
-import 'package:choco_lyrics/ui/search/add_button.dart';
 
 class AlbumRow extends StatelessWidget {
   final Album album;
   final VoidCallback? onTap;
-  final VoidCallback onAddPressed;
 
   const AlbumRow({
     super.key,
     required this.album,
     this.onTap,
-    required this.onAddPressed,
   });
 
   @override
@@ -69,8 +66,6 @@ class AlbumRow extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 10),
-            AddButton(onPressed: onAddPressed),
           ],
         ),
       ),

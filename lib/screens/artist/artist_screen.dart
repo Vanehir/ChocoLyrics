@@ -1,3 +1,4 @@
+import 'package:choco_lyrics/screens/favorites/favorite_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:choco_lyrics/data/models/artist.dart';
@@ -5,6 +6,7 @@ import 'package:choco_lyrics/data/models/song.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
 import 'package:choco_lyrics/screens/lyrics/lyrics_screen.dart';
 import 'package:choco_lyrics/ui/cards/song_row.dart';
+import 'package:choco_lyrics/ui/favorites/favorite_handler.dart';
 
 class ArtistScreen extends StatefulWidget {
   final Artist artist;
@@ -22,11 +24,37 @@ class _ArtistScreenState extends State<ArtistScreen> {
   List<Song> _topSongs = [];
   bool _isLoading = true;
   static const int maxSongs = 20;
+  final FavoriteHandler _favoriteHandler = FavoriteHandler();
+  Set<String> _favoriteIds = {};
 
   @override
   void initState() {
     super.initState();
     _loadTopSongs();
+    _loadFavoriteIds();
+  }
+
+  Future<void> _loadFavoriteIds() async {
+    final favorites = await _favoriteHandler.getFavorites();
+    setState(() {
+      _favoriteIds = favorites.toSet();
+    });
+  }
+
+  Future<void> _handleFavorite(Song song) async {
+    final favorites = await _favoriteHandler.getFavorites();
+    if (favorites.contains(song.id)) {
+      await _favoriteHandler.removeFavorite(song.id);
+      setState(() {
+        _favoriteIds.remove(song.id);
+      });
+    } else {
+      await _favoriteHandler.addFavorite(song.id);
+      setState(() {
+        _favoriteIds.add(song.id);
+      });
+    }
+    refreshFavorites(); // Trigger refresh of favorites
   }
 
   Future<void> _loadTopSongs() async {
@@ -173,9 +201,8 @@ class _ArtistScreenState extends State<ArtistScreen> {
                                       ),
                                     );
                                   },
-                                  onAddPressed: () {
-                                    // TODO: implement add to favorites
-                                  },
+                                  onAddPressed: () => _handleFavorite(song),
+                                  isFavorite: _favoriteIds.contains(song.id),
                                 ),
                               ),
                             ],

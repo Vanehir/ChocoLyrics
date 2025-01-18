@@ -7,12 +7,14 @@ class SongRow extends StatelessWidget {
   final Song song;
   final VoidCallback? onTap;
   final VoidCallback onAddPressed;
+  final bool isFavorite;
 
   const SongRow({
     super.key,
     required this.song,
     this.onTap,
     required this.onAddPressed,
+    this.isFavorite = false,
   });
 
   @override
@@ -72,7 +74,10 @@ class SongRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
-            AddButton(onPressed: onAddPressed),
+            AddButton(
+              onPressed: onAddPressed,
+              isFavorite: isFavorite,
+            ),
           ],
         ),
       ),

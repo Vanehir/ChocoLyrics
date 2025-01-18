@@ -1,3 +1,4 @@
+import 'package:choco_lyrics/screens/favorites/favorite_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:choco_lyrics/data/models/album.dart';
@@ -5,6 +6,7 @@ import 'package:choco_lyrics/data/models/song.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
 import 'package:choco_lyrics/screens/lyrics/lyrics_screen.dart';
 import 'package:choco_lyrics/ui/cards/song_row.dart';
+import 'package:choco_lyrics/ui/favorites/favorite_handler.dart';
 
 class AlbumScreen extends StatefulWidget {
   final Album album;
@@ -21,39 +23,64 @@ class AlbumScreen extends StatefulWidget {
 class _AlbumScreenState extends State<AlbumScreen> {
   List<Song> _songs = [];
   bool _isLoading = true;
+  final FavoriteHandler _favoriteHandler = FavoriteHandler();
+  Set<String> _favoriteIds = {};
 
   @override
   void initState() {
     super.initState();
     _loadSongs();
+    _loadFavoriteIds();
+  }
+
+  Future<void> _loadFavoriteIds() async {
+    final favorites = await _favoriteHandler.getFavorites();
+    setState(() {
+      _favoriteIds = favorites.toSet();
+    });
+  }
+
+  Future<void> _handleFavorite(Song song) async {
+    final favorites = await _favoriteHandler.getFavorites();
+    if (favorites.contains(song.id)) {
+      await _favoriteHandler.removeFavorite(song.id);
+      setState(() {
+        _favoriteIds.remove(song.id);
+      });
+    } else {
+      await _favoriteHandler.addFavorite(song.id);
+      setState(() {
+        _favoriteIds.add(song.id);
+      });
+    }
+    refreshFavorites();
   }
 
   Future<void> _loadSongs() async {
-  try {
-    final spotifyRepository = SpotifyRepository();
-    final searchQuery = '${widget.album.artists.first.name} ${widget.album.name}';
-    final results = await spotifyRepository.getItemFromSearch(
-      query: searchQuery,
-      queryParameter: SpotifySearchType.track,
-    );
+    try {
+      final spotifyRepository = SpotifyRepository();
+      final searchQuery = '${widget.album.artists.first.name} ${widget.album.name}';
+      final results = await spotifyRepository.getItemFromSearch(
+        query: searchQuery,
+        queryParameter: SpotifySearchType.track,
+      );
 
-    // Filter songs by matching the album name and artist
-    final albumSongs = results
-        .whereType<Song>()
-        .where((song) => song.album.name.toLowerCase() == widget.album.name.toLowerCase())
-        .toList();
+      final albumSongs = results
+          .whereType<Song>()
+          .where((song) => song.album.name.toLowerCase() == widget.album.name.toLowerCase())
+          .toList();
 
-    setState(() {
-      _songs = albumSongs;
-      _isLoading = false;
-    });
-  } catch (e) {
-    print('Error loading songs: $e');
-    setState(() {
-      _isLoading = false;
-    });
+      setState(() {
+        _songs = albumSongs;
+        _isLoading = false;
+      });
+    } catch (e) {
+      print('Error loading songs: $e');
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -171,9 +198,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
                                       ),
                                     );
                                   },
-                                  onAddPressed: () {
-                                    // TODO: implement add to favorites
-                                  },
+                                  onAddPressed: () => _handleFavorite(song),
+                                  isFavorite: _favoriteIds.contains(song.id),
                                 ),
                               ),
                             ],

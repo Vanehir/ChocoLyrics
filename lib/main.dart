@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:choco_lyrics/core/storage/secure_storage.dart';
-import 'package:choco_lyrics/data/repositories/spotify/spotify_constants.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
 import 'package:choco_lyrics/screens/tab_scaffold/tab_scaffold.dart';
 import 'package:choco_lyrics/themes/light_theme.dart';
@@ -9,8 +6,6 @@ import 'package:choco_lyrics/ui/favorites/favorite_handler.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:developer';
-
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

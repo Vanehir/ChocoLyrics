@@ -3,10 +3,12 @@ import 'package:choco_lyrics/data/models/artist.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
 import 'package:choco_lyrics/screens/album/album_screen.dart';
 import 'package:choco_lyrics/screens/artist/artist_screen.dart';
+import 'package:choco_lyrics/screens/favorites/favorite_screen.dart';
 import 'package:choco_lyrics/screens/lyrics/lyrics_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:choco_lyrics/ui/cards/album_row.dart';
 import 'package:choco_lyrics/ui/cards/artist_row.dart';
+import 'package:choco_lyrics/ui/favorites/favorite_handler.dart';
 import 'package:choco_lyrics/ui/search/filter_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:choco_lyrics/ui/search/search_bar.dart';
@@ -23,10 +25,41 @@ class ExploreScreen extends StatefulWidget {
 
 class _ExploreScreenState extends State<ExploreScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final FavoriteHandler _favoriteHandler = FavoriteHandler();
   List<dynamic> _items = [];
   bool _isLoading = false;
   String? _error;
   SpotifySearchType _activeFilter = SpotifySearchType.track;
+  Set<String> _favoriteIds = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavoriteIds();
+  }
+
+  Future<void> _loadFavoriteIds() async {
+    final favorites = await _favoriteHandler.getFavorites();
+    setState(() {
+      _favoriteIds = favorites.toSet();
+    });
+  }
+
+  Future<void> _handleFavorite(Song song) async {
+  final favorites = await _favoriteHandler.getFavorites();
+  if (favorites.contains(song.id)) {
+    await _favoriteHandler.removeFavorite(song.id);
+    setState(() {
+      _favoriteIds.remove(song.id);
+    });
+  } else {
+    await _favoriteHandler.addFavorite(song.id);
+    setState(() {
+      _favoriteIds.add(song.id);
+    });
+  }
+  refreshFavorites(); // Add this line to trigger refresh
+}
 
   Future<void> _searchItems(String query) async {
     if (query.isEmpty) return;
@@ -64,7 +97,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
 
   Widget _buildItemRow(dynamic item) {
-    print('Building row for item type: ${item.runtimeType}');
     if (item is Song) {
       return SongRow(
         song: item,
@@ -76,9 +108,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
             ),
           );
         },
-        onAddPressed: () {
-          //TODO: implement add to favorites
-        },
+        onAddPressed: () => _handleFavorite(item),
+        isFavorite: _favoriteIds.contains(item.id),
       );
     } else if (item is Album) {
       return AlbumRow(
@@ -90,9 +121,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
               builder: (context) => AlbumScreen(album: item),
             ),
           );
-        },
-        onAddPressed: () {
-          print('Add album to favorites: ${item.name}');
         },
       );
     } else if (item is Artist) {
@@ -106,12 +134,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
             ),
           );
         },
-        onAddPressed: () {
-          print('Add artist to favorites: ${item.name}');
-        },
       );
     }
-    print('Unknown item type: ${item.runtimeType}');
     return const SizedBox.shrink();
   }
 
