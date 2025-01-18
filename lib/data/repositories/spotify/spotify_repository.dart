@@ -1,4 +1,4 @@
-import 'package:choco_lyrics/core/secure_storage.dart';
+import 'package:choco_lyrics/core/storage/secure_storage.dart';
 import 'package:choco_lyrics/data/models/album.dart';
 import 'package:choco_lyrics/data/models/artist.dart';
 import 'package:choco_lyrics/data/models/song.dart';
