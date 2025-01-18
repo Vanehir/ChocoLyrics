@@ -77,8 +77,17 @@ class SpotifyRepository {
     }
   }
 
-  // get a track from Spotify by id
-  Future<Song> getTrackById({required String idTrack}) async {
+  Future<List<Song>> getSongsById({required List<String> songIds}) async {
+    List<Song> songs = [];
+    for (String songId in songIds) {
+      Song song = await _getTrackById(idTrack: songId);
+      songs.add(song);
+    }
+    return songs;
+  }
+
+  // [private] get a track from Spotify by id
+  Future<Song> _getTrackById({required String idTrack}) async {
     try {
       await getSpotifyAccessToken.getAccessToken();
       String? token = await secureStorage.getItem(key: accessTokenKey);
@@ -101,7 +110,7 @@ class SpotifyRepository {
     }
   }
 
-  // private function to get the list of items from the response
+  // [private] function to get the list of items from the response
   List<dynamic> _getList(
       {required Response<dynamic> response,
       SpotifySearchType? queryParameter}) {
