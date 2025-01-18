@@ -8,6 +8,6 @@ const CupertinoThemeData cupertinoCustomThemeLight = CupertinoThemeData(
     textTheme: CupertinoTextThemeData(
         primaryColor: aubergine,
         textStyle: TextStyle(
-            fontFamily: 'Montserrat', fontSize: 16, color: Color(0xFF713024))),
-    barBackgroundColor: paleBrown,
+            fontFamily: 'Montserrat', fontSize: 16, color: brown)),
+    barBackgroundColor: darkBrownSemiTransparent,
     scaffoldBackgroundColor: beige);

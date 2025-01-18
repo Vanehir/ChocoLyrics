@@ -119,6 +119,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
     return CupertinoPageScaffold(
       backgroundColor: beige,
       child: SafeArea(
+        bottom: false,
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
@@ -208,7 +209,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
                             ),
                           )
                         : SingleChildScrollView(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 100,),
+                            
                             child: Column(
                               children: _items
                                   .map((item) => Padding(
@@ -217,7 +219,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                         child: _buildItemRow(item),
                                       ))
                                   .toList(),
+                                  
                             ),
+                            
                           ),
               ),
             ],

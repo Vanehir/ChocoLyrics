@@ -70,7 +70,7 @@ class MainApp extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
 
-      // staring point, to change with splash screen
+      // starting point, to change with splash screen
       home: const TabScaffold(),
     );
   }
