@@ -1,6 +1,7 @@
 import 'package:choco_lyrics/data/models/album.dart';
 import 'package:choco_lyrics/data/models/artist.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
+import 'package:choco_lyrics/screens/album/album_screen.dart';
 import 'package:choco_lyrics/screens/lyrics/lyrics_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:choco_lyrics/ui/cards/album_row.dart';
@@ -71,8 +72,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
       return AlbumRow(
         album: item,
         onTap: () {
-          // TODO: Navigate to album details screen
-          print('Album tapped: ${item.name}');
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => AlbumScreen(album: item),
+            ),
+          );
         },
         onAddPressed: () {
           // TODO: implement add to favorites
@@ -105,115 +110,115 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
 
   @override
-Widget build(BuildContext context) {
-  return CupertinoPageScaffold(
-    backgroundColor: beige,
-    child: SafeArea(
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: beige,
-                boxShadow: [
-                  BoxShadow(
-                    color: darkBrown.withOpacity(0.15),
-                    blurRadius: 10,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                children: [
-                  Text(
-                    tr('explore.title'),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: darkBrown,
-                      fontSize: 35,
-                      fontFamily: 'Calibri',
-                      fontWeight: FontWeight.w700,
-                      height: 0.46,
-                      letterSpacing: 0.50,
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      backgroundColor: beige,
+      child: SafeArea(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: beige,
+                  boxShadow: [
+                    BoxShadow(
+                      color: darkBrown.withOpacity(0.15),
+                      blurRadius: 10,
+                      offset: const Offset(0, 6),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  CustomSearchBar(
-                    controller: _searchController,
-                    onSubmitted: (value) {
-                      _searchItems(value);
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: FilterButton(
-                          filterText: 'Track',
-                          isActive: _activeFilter == 'track',
-                          onTap: () => _toggleFilter('track'),
-                        ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  children: [
+                    Text(
+                      tr('explore.title'),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: darkBrown,
+                        fontSize: 35,
+                        fontFamily: 'Calibri',
+                        fontWeight: FontWeight.w700,
+                        height: 0.46,
+                        letterSpacing: 0.50,
                       ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: FilterButton(
-                          filterText: 'Album',
-                          isActive: _activeFilter == 'album',
-                          onTap: () => _toggleFilter('album'),
+                    ),
+                    const SizedBox(height: 20),
+                    CustomSearchBar(
+                      controller: _searchController,
+                      onSubmitted: (value) {
+                        _searchItems(value);
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: FilterButton(
+                            filterText: 'Track',
+                            isActive: _activeFilter == 'track',
+                            onTap: () => _toggleFilter('track'),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: FilterButton(
-                          filterText: 'Artist',
-                          isActive: _activeFilter == 'artist',
-                          onTap: () => _toggleFilter('artist'),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: FilterButton(
+                            filterText: 'Album',
+                            isActive: _activeFilter == 'album',
+                            onTap: () => _toggleFilter('album'),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: FilterButton(
+                            filterText: 'Artist',
+                            isActive: _activeFilter == 'artist',
+                            onTap: () => _toggleFilter('artist'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: _isLoading
-                  ? const Center(child: CupertinoActivityIndicator())
-                  : _items.isEmpty
-                      ? Center(
-                          child: Text(
-                            _searchController.text.isEmpty
-                                ? tr('explore.search_prompt')
-                                : tr('explore.no_results'),
-                            style: const TextStyle(
-                              color: darkBrown,
-                              fontSize: 16,
-                              fontFamily: 'Roboto',
+              Expanded(
+                child: _isLoading
+                    ? const Center(child: CupertinoActivityIndicator())
+                    : _items.isEmpty
+                        ? Center(
+                            child: Text(
+                              _searchController.text.isEmpty
+                                  ? tr('explore.search_prompt')
+                                  : tr('explore.no_results'),
+                              style: const TextStyle(
+                                color: darkBrown,
+                                fontSize: 16,
+                                fontFamily: 'Roboto',
+                              ),
+                            ),
+                          )
+                        : SingleChildScrollView(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Column(
+                              children: _items
+                                  .map((item) => Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 10.0),
+                                        child: _buildItemRow(item),
+                                      ))
+                                  .toList(),
                             ),
                           ),
-                        )
-                      : SingleChildScrollView(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Column(
-                            children: _items
-                                .map((item) => Padding(
-                                      padding:
-                                          const EdgeInsets.only(top: 10.0),
-                                      child: _buildItemRow(item),
-                                    ))
-                                .toList(),
-                          ),
-                        ),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

@@ -6,6 +6,7 @@ class Song {
   final int durationMs;
   final List<Artist> artists;
   final String albumCoverUrl;
+  final String albumId;  // I added this field or the album screen wouldn't work
 
   Song({
     required this.id,
@@ -13,6 +14,7 @@ class Song {
     required this.durationMs,
     required this.artists,
     required this.albumCoverUrl,
+    required this.albumId,  // I added this field or the album screen wouldn't work
   });
 
   factory Song.fromJson(Map<String, dynamic> json) {
@@ -24,6 +26,7 @@ class Song {
           .map((artist) => Artist.fromJson(artist))
           .toList(),
       albumCoverUrl: json['album']?['images']?[0]?['url'] ?? '',
+      albumId: json['album']?['id'] ?? '',  // I added this field or the album screen wouldn't work
     );
   }
 
@@ -32,6 +35,7 @@ class Song {
     return 'Song: $name, \n'
         'Artists: ${artists.map((artist) => artist.name).join(', ')}, \n'
         'Duration: $durationMs, \n'
-        'Album Cover URL: $albumCoverUrl\n';
+        'Album Cover URL: $albumCoverUrl\n'
+        'Album ID: $albumId\n';
   }
 }

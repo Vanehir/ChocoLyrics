@@ -2,12 +2,6 @@ import 'package:choco_lyrics/data/models/song.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:choco_lyrics/ui/search/add_button.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
-import 'package:choco_lyrics/data/models/song.dart';
-import 'package:choco_lyrics/themes/colors/colors.dart';
-import 'package:choco_lyrics/ui/search/add_button.dart';
-import 'package:flutter/material.dart';
 
 class SongRow extends StatelessWidget {
   final Song song;
@@ -71,6 +65,8 @@ class SongRow extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                       height: 1.48,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
