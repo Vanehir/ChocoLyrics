@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:choco_lyrics/ui/search/search_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:choco_lyrics/data/models/song.dart';
-import 'package:choco_lyrics/ui/components/song_row.dart';
+import 'package:choco_lyrics/ui/cards/song_row.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -35,7 +35,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
         _songs = results.cast<Song>();
       });
     } catch (e) {
-      // Handle error
+      print(e);
     } finally {
       setState(() {
         _isLoading = false;
@@ -116,7 +116,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                                 LyricsScreen(song: song),
                                           ),
                                         );
-                                      },
+                                      }, 
+                                      onAddPressed: () { 
+                                        //TODO: implement add to favorites
+                                       },
                                     ),
                                   ))
                               .toList(),
