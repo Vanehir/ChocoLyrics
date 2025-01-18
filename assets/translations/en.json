@@ -4,6 +4,12 @@
     "search": "Explore",
     "favorites": "Favorite"
   },
+  "home": {
+    "title": "Chocolyrics",
+    "description": "This is the home screen",
+    "firstPlaylist": "Today's top hits",
+    "secondPlaylist": "Top 50 Global"
+  },
   "explore": {
     "title": "Explore",
     "search": "Search"
