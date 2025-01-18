@@ -20,6 +20,7 @@ class HomeScreenState extends State<HomeScreen> {
   final SpotifyRepository spotifyRepository = SpotifyRepository();
   List<Song> topHits = [];
   List<Song> top50Global = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -35,9 +36,13 @@ class HomeScreenState extends State<HomeScreen> {
         // Explicitly cast the dynamic list to List<Song>
         topHits = (topHitsPlaylist).map((item) => item as Song).toList();
         top50Global = (top50GlobalPlaylist).map((item) => item as Song).toList();
+        _isLoading = false;
       });
     } catch (e) {
       debugPrint('Error fetching playlists: $e');
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -45,10 +50,13 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: SafeArea(
-        child: SingleChildScrollView(
+        bottom: false,
+        child: _isLoading 
+          ? const Center(child: CupertinoActivityIndicator(radius: 20))
+          : SingleChildScrollView(
           child: Container(
             width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.symmetric(vertical: 25),
+            padding: const EdgeInsets.symmetric(vertical: 25).copyWith(bottom: 80),
             decoration: const BoxDecoration(color: beige),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,

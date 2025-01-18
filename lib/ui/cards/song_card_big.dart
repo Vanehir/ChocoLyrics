@@ -63,7 +63,7 @@ class SongCardBig extends StatelessWidget {
           Text(
             artist,
             style: const TextStyle(
-              color: beige,
+              color: darkBeige,
               fontSize: 18,
               fontFamily: 'Roboto',
               fontWeight: FontWeight.w400,

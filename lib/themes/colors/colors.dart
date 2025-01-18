@@ -8,5 +8,5 @@ const paleBrown = Color(0xFFAE6842);
 const brown = Color(0xFF713024);
 const darkBrown = Color(0xFF2A0505);
 const darkBrownShadow = Color(0x59713024);
-const darkBrownSemiTransparent = Color(0xE62A0505);
+const darkBrownSemiTransparent = Color(0xCC2A0505);
 // add more colors as needed

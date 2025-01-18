@@ -92,7 +92,7 @@ class SongCardSmall extends StatelessWidget {
                 Text(
                   artist.isNotEmpty ? artist : 'Unknown Artist',
                   style: const TextStyle(
-                    color: beige,
+                    color: darkBeige,
                     fontSize: 9,
                     fontFamily: 'Roboto',
                     fontWeight: FontWeight.w400,
