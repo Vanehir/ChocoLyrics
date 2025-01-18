@@ -1,5 +1,6 @@
 import 'package:choco_lyrics/screens/favorites/favorite_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:choco_lyrics/data/models/artist.dart';
 import 'package:choco_lyrics/data/models/song.dart';
@@ -156,7 +157,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
 
                     // Section Title
                     Text(
-                      "Top 20 ${widget.artist.name} songs",
+                      "artist.topSongs".tr(),
                       style: TextStyle(
                         color: darkBrown,
                         fontSize: 20,
@@ -172,7 +173,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
                     else if (_topSongs.isEmpty)
                       Center(
                         child: Text(
-                          'No songs found',
+                          'artist.noSongs'.tr(),
                           style: TextStyle(
                             color: darkBrown.withOpacity(0.7),
                             fontSize: 14,

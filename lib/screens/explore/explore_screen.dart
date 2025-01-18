@@ -90,7 +90,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
     } catch (e) {
       print('Search error: $e');
       setState(() {
-        _error = 'Failed to load results. Please try again.';
+        _error = 'explore.errorMessages'.tr();
         _isLoading = false;
       });
     }
@@ -225,8 +225,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
                           ? Center(
                               child: Text(
                                 _searchController.text.isEmpty
-                                    ? 'Search for songs, albums, or artists'
-                                    : 'No results found',
+                                    ? 'explore.emptyState.initial'.tr()
+                                    : 'explore.emptyState.noResults'.tr(),
                                 style: const TextStyle(
                                   color: darkBrown,
                                   fontSize: 16,

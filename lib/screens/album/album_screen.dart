@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:choco_lyrics/screens/favorites/favorite_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:flutter/cupertino.dart';
@@ -91,7 +92,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
         border: null,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
-          child: const Icon(
+          child: Icon(
             CupertinoIcons.back,
             color: darkBrown,
           ),
@@ -154,7 +155,10 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
                     // Total Tracks
                     Text(
-                      '${widget.album.totalTracks} tracks • ${_songs.length} found',
+                      tr('album.totTracks', namedArgs: {
+                        'totalTracks': widget.album.totalTracks.toString(),
+                        'foundSongs': _songs.length.toString()
+                      }),
                       style: TextStyle(
                         color: darkBrown.withOpacity(0.7),
                         fontSize: 14,
@@ -169,7 +173,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                     else if (_songs.isEmpty)
                       Center(
                         child: Text(
-                          'No songs found',
+                          tr('album.noSongsFound'),
                           style: TextStyle(
                             color: darkBrown.withOpacity(0.7),
                             fontSize: 14,

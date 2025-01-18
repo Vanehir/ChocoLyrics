@@ -4,8 +4,27 @@
     "search": "Explore",
     "favorites": "Favorite"
   },
+  "home": {
+    "title": "Chocolyrics",
+    "description": "This is the home screen",
+    "firstPlaylist": "Today's top hits",
+    "secondPlaylist": "Top 50 Global"
+  },
   "explore": {
     "title": "Explore",
-    "search": "Search"
+    "search": "Search",
+    "emptyState": {
+      "initial": "Search for songs, albums, or artists",
+      "noResults": "No results found"
+    },
+    "errorMessage": "Failed to load results. Please try again."
+  },
+  "album": {
+    "totTracks": "{totalTracks} tracks • {foundSongs} found",
+    "noSongsFound": "No songs found"
+  },
+  "artist": {
+    "topSongs": "Top {maxSongs} {artistName} songs",
+    "noSongsFound": "No songs found"
   }
 }
