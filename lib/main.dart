@@ -20,37 +20,6 @@ void main() async {
 
   // start area debug test api getPlaylist calls
   final SpotifyRepository spotifyRepository = SpotifyRepository();
-  print('playlist start XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-  final songs = await spotifyRepository.getPlaylist(idPlaylist: todayTopHits);
-  for (var song in songs) {
-    print(song.toString());
-  }
-  print('playlist end XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-
-  print('tracks start XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-  final tracksSearch = await spotifyRepository.getItemFromSearch(
-      query: 'eminem', queryParameter: 'track');
-  for (var track in tracksSearch) {
-    print(track.toString());
-  }
-  print('tracks end XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-
-  print('albums start XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-  final albumsSearch = await spotifyRepository.getItemFromSearch(
-      query: 'eminem', queryParameter: 'album');
-  for (var album in albumsSearch) {
-    print(album.toString());
-  }
-  print('albums end XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-
-  print('artists start XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-  final artistsSearch = await spotifyRepository.getItemFromSearch(
-      query: 'eminem', queryParameter: 'artist');
-  for (var artist in artistsSearch) {
-    print(artist.toString());
-  }
-  print('artists end XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-  // end area debug test api getPlaylist calls
 }
 
 class MainApp extends StatelessWidget {
