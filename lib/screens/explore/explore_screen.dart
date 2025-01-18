@@ -90,7 +90,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
     } catch (e) {
       print('Search error: $e');
       setState(() {
-        _error = 'explore.errorMessages'.tr();
+        _error = 'explore.errorMessage'.tr();
         _isLoading = false;
       });
     }

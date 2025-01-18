@@ -28,18 +28,18 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> fetchPlaylists() async {
-  try {
-    final topHitsPlaylist = await spotifyRepository.getPlaylist(idPlaylist: todayTopHits);
-    final top50GlobalPlaylist = await spotifyRepository.getPlaylist(idPlaylist: top50GlobalId);
-    setState(() {
-      // Explicitly cast the dynamic list to List<Song>
-      topHits = (topHitsPlaylist).map((item) => item as Song).toList();
-      top50Global = (top50GlobalPlaylist).map((item) => item as Song).toList();
-    });
-  } catch (e) {
-    debugPrint('Error fetching playlists: $e');
+    try {
+      final topHitsPlaylist = await spotifyRepository.getPlaylist(idPlaylist: todayTopHits);
+      final top50GlobalPlaylist = await spotifyRepository.getPlaylist(idPlaylist: top50GlobalId);
+      setState(() {
+        // Explicitly cast the dynamic list to List<Song>
+        topHits = (topHitsPlaylist).map((item) => item as Song).toList();
+        top50Global = (top50GlobalPlaylist).map((item) => item as Song).toList();
+      });
+    } catch (e) {
+      debugPrint('Error fetching playlists: $e');
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,7 @@ class HomeScreenState extends State<HomeScreen> {
         child: SingleChildScrollView(
           child: Container(
             width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.symmetric(vertical: 20),
+            padding: const EdgeInsets.symmetric(vertical: 25),
             decoration: const BoxDecoration(color: beige),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -92,31 +92,32 @@ class HomeScreenState extends State<HomeScreen> {
                 CarouselSlider.builder(
                   itemCount: topHits.length,
                   itemBuilder: (context, index, realIndex) {
-                  final song = topHits[index];
-                  return Container(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 20.0), // Increased margin
-                    child: SongCardBig(
-                    imageUrl: song.album.coverUrl,
-                    title: song.name,
-                    artist: song.artists.map((artist) => artist.name).join(', '), onTap: () { 
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => LyricsScreen(song: song),
+                    final song = topHits[index];
+                    return Container(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 20.0),
+                      child: SongCardBig(
+                        imageUrl: song.album.coverUrl,
+                        title: song.name,
+                        artist: song.artists.map((artist) => artist.name).join(', '),
+                        onTap: () { 
+                          Navigator.push(
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => LyricsScreen(song: song),
+                            ),
+                          );
+                        },
                       ),
                     );
-                     },
-                    ),
-                  );
                   },
                   options: CarouselOptions(
-                  height: 270.0,
-                  enlargeCenterPage: false,
-                  enableInfiniteScroll: true,
-                  autoPlayAnimationDuration: Duration(milliseconds: 800),
-                  viewportFraction: 0.4,
-                  padEnds: false,
+                    height: 270.0,
+                    enlargeCenterPage: false,
+                    enableInfiniteScroll: true,
+                    autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                    viewportFraction: 0.4,
+                    padEnds: false,
                   ),
                 ),
                 const SizedBox(height: 40),
@@ -142,35 +143,29 @@ class HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                GridView.builder(
+                // Replace GridView.builder with a custom solution
+                Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 0.8,
-                  ),
-                  itemCount: top50Global.length,
-                  itemBuilder: (context, index) {
-                    final song = top50Global[index];
-                    return LayoutBuilder(
-                      builder: (context, constraints) {
-                        return SongCardSmall(
+                  child: Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: top50Global.map((song) {
+                      return SizedBox(
+                        width: (MediaQuery.of(context).size.width - 30) / 2, // Subtract padding and spacing
+                        child: SongCardSmall(
                           imageUrl: song.album.coverUrl,
                           title: song.name,
                           artist: song.artists.map((artist) => artist.name).join(', '),
                           onTap: () => Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => LyricsScreen(song: song),
-                      ),
-                    )
-                        );
-                      },
-                    );
-                  },
+                            context,
+                            CupertinoPageRoute(
+                              builder: (context) => LyricsScreen(song: song),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ],
             ),
