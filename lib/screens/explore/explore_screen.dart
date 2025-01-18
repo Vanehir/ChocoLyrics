@@ -74,7 +74,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
               // Search Bar
               CustomSearchBar(
                 controller: _searchController,
-                onChanged: (value) {
+                onSubmitted: (value) {
                   _searchSongs(value);
                 },
               ),
