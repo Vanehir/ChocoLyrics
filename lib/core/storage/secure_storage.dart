@@ -5,8 +5,7 @@ class SecureStorage {
   final _storage = const FlutterSecureStorage();
 
   Future<void> setItem({required String key, required String item}) async {
-      await _storage.write(key: key, value: item);
-
+    await _storage.write(key: key, value: item);
   }
 
   Future<String?> getItem({required String key}) async {
@@ -14,6 +13,14 @@ class SecureStorage {
       return await _storage.read(key: key);
     } catch (e) {
       throw Exception("Error getting item: $e");
+    }
+  }
+
+  Future<void> deleteItem({required String key}) async {
+    try {
+      await _storage.delete(key: key);
+    } catch (e) {
+      log("Error deleting item: $e");
     }
   }
 

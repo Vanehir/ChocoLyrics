@@ -1,7 +1,8 @@
-import 'package:choco_lyrics/core/secure_storage.dart';
+import 'package:choco_lyrics/core/storage/secure_storage.dart';
 import 'package:choco_lyrics/utilities/base64_encode.dart';
 import 'package:dio/dio.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_constants.dart';
+import 'package:choco_lyrics/data/repositories/spotify/spotify_keys.dart';
 
 class GetSpotifyAccessToken {
   final Dio dio = Dio();

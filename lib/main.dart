@@ -1,9 +1,16 @@
+import 'dart:convert';
+
+import 'package:choco_lyrics/core/storage/secure_storage.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_constants.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
 import 'package:choco_lyrics/screens/tab_scaffold/tab_scaffold.dart';
 import 'package:choco_lyrics/themes/light_theme.dart';
+import 'package:choco_lyrics/ui/favorites/favorite_handler.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:developer';
+
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,39 +25,44 @@ void main() async {
     ),
   );
 
-  // start area debug test api getPlaylist calls
+  // start area debug test
   final SpotifyRepository spotifyRepository = SpotifyRepository();
-  print('playlist start XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-  final songs = await spotifyRepository.getPlaylist(idPlaylist: todayTopHits);
-  for (var song in songs) {
-    print(song.toString());
-  }
-  print('playlist end XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+  final FavoriteHandler favoriteHandler = FavoriteHandler();
+  final SecureStorage secureStorage = SecureStorage();
+  final songsIds = [
+    '19DHPlTC2gx1j4jrFzNbwL',
+    '3zjwZqLebYTDvRS2RJH5Be',
+    '4I2SWtTgB08SICbqN6983B'
+  ];
 
-  print('tracks start XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-  final tracksSearch = await spotifyRepository.getItemFromSearch(
-      query: 'eminem', queryParameter: 'track');
-  for (var track in tracksSearch) {
-    print(track.toString());
-  }
-  print('tracks end XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+  // clear storage
+  await secureStorage.clearStorage();
 
-  print('albums start XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-  final albumsSearch = await spotifyRepository.getItemFromSearch(
-      query: 'eminem', queryParameter: 'album');
-  for (var album in albumsSearch) {
-    print(album.toString());
-  }
-  print('albums end XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+  // adding the song
+  await favoriteHandler.addFavorite(songsIds[1]);
+  log('favorites: ${await secureStorage.getItem(key: favoritesKey)}');
 
-  print('artists start XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-  final artistsSearch = await spotifyRepository.getItemFromSearch(
-      query: 'eminem', queryParameter: 'artist');
-  for (var artist in artistsSearch) {
-    print(artist.toString());
+  final songsFavorites = await spotifyRepository.getSongsById(
+      songIds: await favoriteHandler.getFavorites());
+
+  // print with the added song
+  for (final song in songsFavorites) {
+    log(song.toString());
   }
-  print('artists end XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-  // end area debug test api getPlaylist calls
+
+  // deleting the song
+  await favoriteHandler.removeFavorite(songsIds[1]);
+
+  final songsFavoritesAfterDelete = await spotifyRepository.getSongsById(
+      songIds: await favoriteHandler.getFavorites());
+
+  // print with the deleted song
+  for (final song in songsFavoritesAfterDelete) {
+    log(song.toString());
+  }
+  log('favorites: ${await secureStorage.getItem(key: favoritesKey)}');
+
+  // end area debug test
 }
 
 class MainApp extends StatelessWidget {
