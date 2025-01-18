@@ -92,15 +92,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       backgroundColor: beige,
       navigationBar: const CupertinoNavigationBar(
         backgroundColor: beige,
-        border: null,
-        middle: Text(
-          'Favorites',
-          style: TextStyle(
-            color: darkBrown,
-            fontSize: 17,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        border: null
       ),
       child: SafeArea(
         child: _isLoading

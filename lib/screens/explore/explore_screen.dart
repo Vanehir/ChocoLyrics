@@ -170,19 +170,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
               padding: const EdgeInsets.all(15),
               child: Column(
                 children: [
-                  Text(
-                    tr('explore.title'),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: darkBrown,
-                      fontSize: 35,
-                      fontFamily: 'Calibri',
-                      fontWeight: FontWeight.w700,
-                      height: 0.46,
-                      letterSpacing: 0.50,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
                   CustomSearchBar(
                     controller: _searchController,
                     onSubmitted: (value) {

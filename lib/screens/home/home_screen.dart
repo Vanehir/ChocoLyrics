@@ -28,17 +28,18 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> fetchPlaylists() async {
-    try {
-      final topHitsPlaylist = await spotifyRepository.getPlaylist(idPlaylist: todayTopHits);
-      final top50GlobalPlaylist = await spotifyRepository.getPlaylist(idPlaylist: top50GlobalId);
-      setState(() {
-        topHits = topHitsPlaylist;
-        top50Global = top50GlobalPlaylist;
-      });
-    } catch (e) {
-      debugPrint('Error fetching playlists: $e');
-    }
+  try {
+    final topHitsPlaylist = await spotifyRepository.getPlaylist(idPlaylist: todayTopHits);
+    final top50GlobalPlaylist = await spotifyRepository.getPlaylist(idPlaylist: top50GlobalId);
+    setState(() {
+      // Explicitly cast the dynamic list to List<Song>
+      topHits = (topHitsPlaylist).map((item) => item as Song).toList();
+      top50Global = (top50GlobalPlaylist).map((item) => item as Song).toList();
+    });
+  } catch (e) {
+    debugPrint('Error fetching playlists: $e');
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +97,7 @@ class HomeScreenState extends State<HomeScreen> {
                     width: MediaQuery.of(context).size.width * 0.4,
                     margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 20.0), // Increased margin
                     child: SongCardBig(
-                    imageUrl: song.albumCoverUrl,
+                    imageUrl: song.album.coverUrl,
                     title: song.name,
                     artist: song.artists.map((artist) => artist.name).join(', '), onTap: () { 
                     Navigator.push(
@@ -157,7 +158,7 @@ class HomeScreenState extends State<HomeScreen> {
                     return LayoutBuilder(
                       builder: (context, constraints) {
                         return SongCardSmall(
-                          imageUrl: song.albumCoverUrl,
+                          imageUrl: song.album.coverUrl,
                           title: song.name,
                           artist: song.artists.map((artist) => artist.name).join(', '),
                           onTap: () => Navigator.push(

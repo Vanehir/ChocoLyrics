@@ -42,27 +42,28 @@ class SpotifyRepository {
   // TODO the first half part of this functions in one function
 
   // get a playlist from Spotify by id
-  Future<List<dynamic>> getPlaylist({required String idPlaylist}) async {
-    try {
-      await getSpotifyAccessToken.getAccessToken();
-      String? token = await secureStorage.getItem(key: accessTokenKey);
-      final response = await dio.get(
-        '$playListUrl$idPlaylist',
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
-        ),
-      );
-      if (response.statusCode == 200) {
-        return _getList(response: response);
-      } else {
-        throw Exception('Failed to get playlist: ${response.statusMessage}');
-      }
-    } catch (e) {
-      throw Exception('Failed to get playlist: $e');
+  Future<List<Song>> getPlaylist({required String idPlaylist}) async {
+  try {
+    await getSpotifyAccessToken.getAccessToken();
+    String? token = await secureStorage.getItem(key: accessTokenKey);
+    final response = await dio.get(
+      '$playListUrl$idPlaylist',
+      options: Options(
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      // Explicitly return a List<Song>
+      return _getList(response: response) as List<Song>;
+    } else {
+      throw Exception('Failed to get playlist: ${response.statusMessage}');
     }
+  } catch (e) {
+    throw Exception('Failed to get playlist: $e');
   }
+}
 
 
   // search from Spotify by track name, album name, artist name
