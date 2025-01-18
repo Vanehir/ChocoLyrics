@@ -1,0 +1,1 @@
+const String searchUrl = 'https://lrclib.net/api/search?q=';
