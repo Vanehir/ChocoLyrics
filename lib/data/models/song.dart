@@ -1,3 +1,4 @@
+import 'package:choco_lyrics/data/models/album.dart';
 import 'package:choco_lyrics/data/models/artist.dart';
 
 class Song {
@@ -5,14 +6,14 @@ class Song {
   final String name;
   final int durationMs;
   final List<Artist> artists;
-  final String albumCoverUrl;
+  final Album album;
 
   Song({
     required this.id,
     required this.name,
     required this.durationMs,
     required this.artists,
-    required this.albumCoverUrl,
+    required this.album,
   });
 
   factory Song.fromJson(Map<String, dynamic> json) {
@@ -23,7 +24,7 @@ class Song {
       artists: ((json['artists'] as List<dynamic>?) ?? [])
           .map((artist) => Artist.fromJson(artist))
           .toList(),
-      albumCoverUrl: json['album']?['images']?[0]?['url'] ?? '',
+      album: Album.fromJson(json['album']),
     );
   }
 
@@ -32,6 +33,7 @@ class Song {
     return 'Song: $name, \n'
         'Artists: ${artists.map((artist) => artist.name).join(', ')}, \n'
         'Duration: $durationMs, \n'
-        'Album Cover URL: $albumCoverUrl\n';
+        'Album: ${album.name}, \n'
+        'Album Cover: ${album.coverUrl}\n';
   }
 }
