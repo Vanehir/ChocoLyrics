@@ -2,6 +2,7 @@ import 'package:choco_lyrics/data/models/album.dart';
 import 'package:choco_lyrics/data/models/artist.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
 import 'package:choco_lyrics/screens/album/album_screen.dart';
+import 'package:choco_lyrics/screens/artist/artist_screen.dart';
 import 'package:choco_lyrics/screens/lyrics/lyrics_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:choco_lyrics/ui/cards/album_row.dart';
@@ -88,8 +89,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
       return ArtistRow(
         artist: item,
         onTap: () {
-          // TODO: Navigate to artist details screen
-          print('Artist tapped: ${item.name}');
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => ArtistScreen(artist: item),
+            ),
+          );
         },
         onAddPressed: () {
           // TODO: implement add to favorites
