@@ -1,0 +1,30 @@
+{
+    "tabBar": {
+      "home": "Home",
+      "search": "Esplora",
+      "favorites": "Preferiti"
+    },
+    "home": {
+      "title": "Chocolyrics",
+      "description": "Questa è la schermata iniziale",
+      "firstPlaylist": "Top Hits del giorno",
+      "secondPlaylist": "Top 50 Globale"
+    },
+    "explore": {
+      "title": "Esplora",
+      "search": "Cerca",
+      "emptyState": {
+        "initial": "Cerca brani, album o artisti",
+        "noResults": "Nessun risultato trovato"
+      },
+      "errorMessage": "Impossibile caricare i risultati. Riprova."
+    },
+    "album": {
+      "totTracks": "{totalTracks} brani • {foundSongs} trovati",
+      "noSongsFound": "Nessun brano trovato"
+    },
+    "artist": {
+      "topSongs": "Top {maxSongs} brani di {artistName}",
+      "noSongsFound": "Nessun brano trovato"
+    }
+  }
