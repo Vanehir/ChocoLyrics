@@ -1,22 +1,16 @@
-import 'package:choco_lyrics/data/models/song.dart';
+import 'package:flutter/material.dart';
+import 'package:choco_lyrics/data/models/album.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:choco_lyrics/ui/search/add_button.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
-import 'package:choco_lyrics/data/models/song.dart';
-import 'package:choco_lyrics/themes/colors/colors.dart';
-import 'package:choco_lyrics/ui/search/add_button.dart';
-import 'package:flutter/material.dart';
-
-class SongRow extends StatelessWidget {
-  final Song song;
+class AlbumRow extends StatelessWidget {
+  final Album album;
   final VoidCallback? onTap;
   final VoidCallback onAddPressed;
 
-  const SongRow({
+  const AlbumRow({
     super.key,
-    required this.song,
+    required this.album,
     this.onTap,
     required this.onAddPressed,
   });
@@ -38,7 +32,7 @@ class SongRow extends StatelessWidget {
               height: 64,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(song.albumCoverUrl),
+                  image: NetworkImage(album.coverUrl),
                   fit: BoxFit.fill,
                 ),
                 borderRadius: BorderRadius.circular(4.38),
@@ -52,7 +46,7 @@ class SongRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    song.name,
+                    album.name,
                     style: const TextStyle(
                       color: beige,
                       fontSize: 16,
@@ -63,7 +57,7 @@ class SongRow extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    song.artists.map((artist) => artist.name).join(', '),
+                    '${album.artists.map((artist) => artist.name).join(', ')} • ${album.totalTracks} tracks',
                     style: const TextStyle(
                       color: darkBeige,
                       fontSize: 13,
