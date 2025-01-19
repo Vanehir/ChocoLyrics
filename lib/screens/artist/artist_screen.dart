@@ -1,6 +1,7 @@
-import 'dart:developer';
-
-import 'package:choco_lyrics/screens/favorites/favorite_screen.dart';
+import 'package:choco_lyrics/screens/artist/artist_cubit.dart';
+import 'package:choco_lyrics/screens/artist/artist_state.dart';
+import 'package:choco_lyrics/screens/favorites/favorites_cubit.dart';
+import 'package:choco_lyrics/screens/favorites/favorites_state.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:choco_lyrics/ui/cards/item_card.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -9,9 +10,9 @@ import 'package:choco_lyrics/data/models/artist.dart';
 import 'package:choco_lyrics/data/models/song.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
 import 'package:choco_lyrics/screens/lyrics/lyrics_screen.dart';
-import 'package:choco_lyrics/ui/favorites/favorite_handler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ArtistScreen extends StatefulWidget {
+class ArtistScreen extends StatelessWidget {
   final Artist artist;
 
   const ArtistScreen({
@@ -20,72 +21,31 @@ class ArtistScreen extends StatefulWidget {
   });
 
   @override
-  State<ArtistScreen> createState() => _ArtistScreenState();
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => ArtistCubit(
+            spotifyRepository: SpotifyRepository(),
+            artist: artist,
+          )..loadTopSongs(),
+        ),
+      ],
+      child: ArtistView(artist: artist),
+    );
+  }
 }
 
-class _ArtistScreenState extends State<ArtistScreen> {
-  List<Song> _topSongs = [];
-  bool _isLoading = true;
-  static const int maxSongs = 20;
-  final FavoriteHandler _favoriteHandler = FavoriteHandler();
-  Set<String> _favoriteIds = {};
+class ArtistView extends StatelessWidget {
+  final Artist artist;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadTopSongs();
-    _loadFavoriteIds();
-  }
+  const ArtistView({
+    super.key,
+    required this.artist,
+  });
 
-  Future<void> _loadFavoriteIds() async {
-    final favorites = await _favoriteHandler.getFavorites();
-    setState(() {
-      _favoriteIds = favorites.toSet();
-    });
-  }
-
-  Future<void> _handleFavorite(Song song) async {
-    final favorites = await _favoriteHandler.getFavorites();
-    if (favorites.contains(song.id)) {
-      await _favoriteHandler.removeFavorite(song.id);
-      setState(() {
-        _favoriteIds.remove(song.id);
-      });
-    } else {
-      await _favoriteHandler.addFavorite(song.id);
-      setState(() {
-        _favoriteIds.add(song.id);
-      });
-    }
-    // refreshFavorites(); // Trigger refresh of favorites
-  }
-
-  Future<void> _loadTopSongs() async {
-    try {
-      final spotifyRepository = SpotifyRepository();
-      final results = await spotifyRepository.getItemFromSearch(
-        query: widget.artist.name,
-        queryParameter: SpotifySearchType.track,
-      );
-
-      // Filter songs by matching the artist
-      final artistSongs = results
-          .whereType<Song>()
-          .where((song) => song.artists.any((artist) =>
-              artist.name.toLowerCase() == widget.artist.name.toLowerCase()))
-          .take(maxSongs)
-          .toList();
-
-      setState(() {
-        _topSongs = artistSongs;
-        _isLoading = false;
-      });
-    } catch (e) {
-      log('Error loading songs: $e');
-      setState(() {
-        _isLoading = false;
-      });
-    }
+  void _handleFavorite(BuildContext context, Song song) {
+    context.read<FavoritesCubit>().toggleFavorite(song.id);
   }
 
   @override
@@ -114,7 +74,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
                 child: Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(widget.artist.imageUrl),
+                      image: NetworkImage(artist.imageUrl),
                       fit: BoxFit.cover,
                     ),
                     boxShadow: [
@@ -135,7 +95,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
                   children: [
                     // Artist Name
                     Text(
-                      widget.artist.name,
+                      artist.name,
                       style: const TextStyle(
                         color: darkBrown,
                         fontSize: 24,
@@ -146,9 +106,9 @@ class _ArtistScreenState extends State<ArtistScreen> {
                     const SizedBox(height: 8),
 
                     // Genres
-                    if (widget.artist.genres.isNotEmpty)
+                    if (artist.genres.isNotEmpty)
                       Text(
-                        widget.artist.genres.join(', '),
+                        artist.genres.join(', '),
                         style: const TextStyle(
                           color: darkBrown,
                           fontSize: 16,
@@ -157,66 +117,96 @@ class _ArtistScreenState extends State<ArtistScreen> {
                       ),
                     const SizedBox(height: 20),
 
-                    // Section Title
-                    Text(
-                      "artist.topSongs".tr(
-                        namedArgs: {
-                          'maxSongs': _topSongs.length.toString(),
-                          'artistName': widget.artist.name,
-                        },
-                      ),
-                      style: TextStyle(
-                        color: darkBrown,
-                        fontSize: 20,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
+                    BlocBuilder<ArtistCubit, ArtistState>(
+                      builder: (context, state) {
+                        return BlocBuilder<FavoritesCubit, FavoritesState>(
+                          builder: (context, favoriteState) {
+                            final favoriteIds = favoriteState is FavoritesLoaded 
+                                ? favoriteState.favoriteIds 
+                                : <String>{};
 
-                    // Songs List
-                    if (_isLoading)
-                      const Center(child: CupertinoActivityIndicator())
-                    else if (_topSongs.isEmpty)
-                      Center(
-                        child: Text(
-                          'artist.noSongs'.tr(),
-                          style: TextStyle(
-                            color: darkBrown.withAlpha(179),
-                            fontSize: 14,
-                            fontFamily: 'Roboto',
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      )
-                    else
-                      ..._topSongs.asMap().entries.map((entry) {
-                        final song = entry.value;
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: Row(
-                            children: [
-                              // Song Row
-                              Expanded(
-                                child: ItemRow(
-                                  item: song,
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                        builder: (context) =>
-                                            LyricsScreen(song: song),
-                                      ),
-                                    );
-                                  },
-                                  onAddPressed: () => _handleFavorite(song),
-                                  isFavorite: _favoriteIds.contains(song.id),
+                            if (state is ArtistLoading) {
+                              return const Center(child: CupertinoActivityIndicator());
+                            }
+
+                            if (state is ArtistError) {
+                              return Center(
+                                child: Text(
+                                  state.message,
+                                  style: TextStyle(
+                                    color: darkBrown.withAlpha(179),
+                                    fontSize: 14,
+                                    fontFamily: 'Roboto',
+                                    fontStyle: FontStyle.italic,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              );
+                            }
+
+                            if (state is ArtistLoaded) {
+                              final songs = state.topSongs;
+
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Section Title
+                                  Text(
+                                    "artist.topSongs".tr(
+                                      namedArgs: {
+                                        'maxSongs': songs.length.toString(),
+                                        'artistName': artist.name,
+                                      },
+                                    ),
+                                    style: const TextStyle(
+                                      color: darkBrown,
+                                      fontSize: 20,
+                                      fontFamily: 'Roboto',
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+
+                                  if (songs.isEmpty)
+                                    Center(
+                                      child: Text(
+                                        'artist.noSongs'.tr(),
+                                        style: TextStyle(
+                                          color: darkBrown.withAlpha(179),
+                                          fontSize: 14,
+                                          fontFamily: 'Roboto',
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
+                                    )
+                                  else
+                                    ...songs.map((song) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(bottom: 10.0),
+                                        child: ItemRow(
+                                          item: song,
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                builder: (context) =>
+                                                    LyricsScreen(song: song),
+                                              ),
+                                            );
+                                          },
+                                          onAddPressed: () => _handleFavorite(context, song),
+                                          isFavorite: favoriteIds.contains(song.id),
+                                        ),
+                                      );
+                                    }),
+                                ],
+                              );
+                            }
+
+                            return const SizedBox.shrink();
+                          },
                         );
-                      }),
+                      },
+                    ),
                   ],
                 ),
               ),
