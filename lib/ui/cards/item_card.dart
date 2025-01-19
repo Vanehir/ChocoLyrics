@@ -1,20 +1,59 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:choco_lyrics/data/models/album.dart';
 import 'package:choco_lyrics/data/models/artist.dart';
+import 'package:choco_lyrics/data/models/song.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
+import 'package:choco_lyrics/ui/search/add_button.dart';
 
-class ArtistRow extends StatelessWidget {
-  final Artist artist;
+class ItemRow extends StatelessWidget {
+  final dynamic item;
   final VoidCallback? onTap;
+  final VoidCallback? onAddPressed;
+  final bool isFavorite;
 
-  const ArtistRow({
+  const ItemRow({
     super.key,
-    required this.artist,
+    required this.item,
     this.onTap,
+    this.onAddPressed,
+    this.isFavorite = false,
   });
+
+  String _getTitle() {
+    if (item is Song) return (item as Song).name;
+    if (item is Album) return (item as Album).name;
+    if (item is Artist) return (item as Artist).name;
+    return '';
+  }
+
+  String _getSubtitle() {
+    if (item is Song) {
+      return (item as Song).artists.map((artist) => artist.name).join(', ');
+    }
+    if (item is Album) {
+      final album = item as Album;
+      return '${album.artists.map((artist) => artist.name).join(', ')} • ${album.totalTracks} tracks';
+    }
+    if (item is Artist && (item as Artist).genres.isNotEmpty) {
+      return (item as Artist).genres.take(2).join(', ');
+    }
+    return '';
+  }
+
+  String _getImageUrl() {
+    if (item is Song) return (item as Song).album.coverUrl;
+    if (item is Album) return (item as Album).coverUrl;
+    if (item is Artist) return (item as Artist).imageUrl;
+    return '';
+  }
 
   @override
   Widget build(BuildContext context) {
+    final imageUrl = _getImageUrl();
+    final bool isArtist = item is Artist;
+    final bool showEmptyArtistImage = isArtist && imageUrl.isEmpty;
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -29,20 +68,19 @@ class ArtistRow extends StatelessWidget {
               width: 65,
               height: 64,
               decoration: BoxDecoration(
-                image: artist.imageUrl.isNotEmpty
+                image: !showEmptyArtistImage && imageUrl.isNotEmpty
                     ? DecorationImage(
-                        image: NetworkImage(artist.imageUrl),
+                        image: NetworkImage(imageUrl),
                         fit: BoxFit.fill,
                         onError: (exception, stackTrace) {
-                          // Fallback if image fails to load
-                          print('Error loading artist image: $exception');
+                          print('Error loading image: $exception');
                         },
                       )
                     : null,
-                color: artist.imageUrl.isEmpty ? Colors.grey[800] : null,
+                color: showEmptyArtistImage ? Colors.grey[800] : null,
                 borderRadius: BorderRadius.circular(4.38),
               ),
-              child: artist.imageUrl.isEmpty
+              child: showEmptyArtistImage
                   ? const Center(
                       child: Icon(
                         CupertinoIcons.person_fill,
@@ -60,7 +98,7 @@ class ArtistRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    artist.name,
+                    _getTitle(),
                     style: const TextStyle(
                       color: beige,
                       fontSize: 16,
@@ -72,9 +110,9 @@ class ArtistRow extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 10),
-                  if (artist.genres.isNotEmpty)
+                  if (_getSubtitle().isNotEmpty)
                     Text(
-                      artist.genres.take(2).join(', '),
+                      _getSubtitle(),
                       style: const TextStyle(
                         color: darkBeige,
                         fontSize: 13,
@@ -88,6 +126,13 @@ class ArtistRow extends StatelessWidget {
                 ],
               ),
             ),
+            if (item is Song && onAddPressed != null) ...[
+              const SizedBox(width: 10),
+              AddButton(
+                onPressed: onAddPressed!,
+                isFavorite: isFavorite,
+              ),
+            ],
           ],
         ),
       ),

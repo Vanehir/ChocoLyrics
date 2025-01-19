@@ -3,7 +3,7 @@ import 'package:choco_lyrics/data/models/song.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
 import 'package:choco_lyrics/screens/lyrics/lyrics_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
-import 'package:choco_lyrics/ui/cards/song_row.dart';
+import 'package:choco_lyrics/ui/cards/item_card.dart';
 import 'package:choco_lyrics/ui/favorites/favorite_handler.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -115,8 +115,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       final song = _favoriteSongs[index];
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 10),
-                        child: SongRow(
-                          song: song,
+                        child: ItemRow(
+                          item: song,
                           onTap: () {
                             Navigator.push(
                               context,
