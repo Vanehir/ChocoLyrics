@@ -1,12 +1,12 @@
 import 'package:choco_lyrics/screens/favorites/favorite_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
+import 'package:choco_lyrics/ui/cards/item_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:choco_lyrics/data/models/artist.dart';
 import 'package:choco_lyrics/data/models/song.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
 import 'package:choco_lyrics/screens/lyrics/lyrics_screen.dart';
-import 'package:choco_lyrics/ui/cards/song_row.dart';
 import 'package:choco_lyrics/ui/favorites/favorite_handler.dart';
 
 class ArtistScreen extends StatefulWidget {
@@ -157,7 +157,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
 
                     // Section Title
                     Text(
-                      "artist.topSongs".tr(),
+                      "Top 10 ${widget.artist.name} tracks", // TODO: Add translation?
                       style: TextStyle(
                         color: darkBrown,
                         fontSize: 20,
@@ -191,8 +191,8 @@ class _ArtistScreenState extends State<ArtistScreen> {
                             children: [
                               // Song Row
                               Expanded(
-                                child: SongRow(
-                                  song: song,
+                                child: ItemRow(
+                                  item: song,
                                   onTap: () {
                                     Navigator.push(
                                       context,
