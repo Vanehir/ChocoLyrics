@@ -27,9 +27,7 @@ class TabScaffold extends StatelessWidget {
         tabBuilder: (BuildContext context, int index) {
           return CupertinoTabView(
             builder: (BuildContext context) {
-              // Ora forniamo solo l'ExploreCubit qui, perché è specifico per l'ExploreScreen
               if (index == 1) {
-                // ExploreScreen
                 return BlocProvider(
                   create: (context) => ExploreCubit(
                     spotifyRepository: SpotifyRepository(),
@@ -51,7 +49,7 @@ class TabScaffold extends StatelessWidget {
       case 0:
         return const HomeScreen();
       case 1:
-        return const ExploreScreen(); // Non dovrebbe mai essere chiamato
+        return const ExploreScreen();
       case 2:
         return const FavoriteScreen();
       default:

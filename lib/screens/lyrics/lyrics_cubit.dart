@@ -50,16 +50,16 @@ class LyricsCubit extends Cubit<LyricsState> {
       songName: song.name,
     );
 
-    if (lyrics != null && lyrics.isNotEmpty) {  // Verifichiamo anche che non sia vuota
+    if (lyrics != null && lyrics.isNotEmpty) {
       emit(LyricsLoaded(
         lyrics: lyrics,
         selectedLines: {},
       ));
     } else {
-      emit(const LyricsError('Lyrics not found'));  // Cambiamo il messaggio di errore
+      emit(const LyricsError('Lyrics not found'));
     }
   } catch (e) {
-    emit(const LyricsError('Lyrics not found'));  // Uniformiamo il messaggio di errore
+    emit(const LyricsError('Lyrics not found'));
   }
 }
 

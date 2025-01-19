@@ -3,8 +3,7 @@ import 'package:choco_lyrics/screens/home/home_state.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
 import 'package:choco_lyrics/screens/lyrics/lyrics_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
-import 'package:choco_lyrics/ui/navigation/components/song_card_big.dart';
-import 'package:choco_lyrics/ui/navigation/components/song_card_small.dart';
+import 'package:choco_lyrics/ui/cards/song_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -113,7 +112,7 @@ class HomeScreenView extends StatelessWidget {
                           width: MediaQuery.of(context).size.width * 0.4,
                           margin: const EdgeInsets.symmetric(
                               horizontal: 5.0, vertical: 20.0),
-                          child: SongCardBig(
+                          child: SongCard(
                             imageUrl: song.album.coverUrl,
                             title: song.name,
                             artist: song.artists
@@ -128,6 +127,7 @@ class HomeScreenView extends StatelessWidget {
                                 ),
                               );
                             },
+                            size: SongCardSize.big,
                           ),
                         );
                       },
@@ -172,7 +172,7 @@ class HomeScreenView extends StatelessWidget {
                         children: state.top50Global.map((song) {
                           return SizedBox(
                             width: (MediaQuery.of(context).size.width - 30) / 2,
-                            child: SongCardSmall(
+                            child: SongCard(
                               imageUrl: song.album.coverUrl,
                               title: song.name,
                               artist: song.artists
@@ -185,6 +185,7 @@ class HomeScreenView extends StatelessWidget {
                                       LyricsScreen(song: song),
                                 ),
                               ),
+                              size: SongCardSize.small,
                             ),
                           );
                         }).toList(),

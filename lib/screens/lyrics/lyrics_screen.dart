@@ -92,7 +92,6 @@ class LyricsView extends StatelessWidget {
     }
 
     if (state is LyricsError || state is LyricsInitial) {
-      // Aggiungiamo il caso initial
       return Center(
         child: Text(
           'Lyrics not found',

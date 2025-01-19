@@ -25,7 +25,6 @@ class AlbumCubit extends Cubit<AlbumState> {
         queryParameter: SpotifySearchType.track,
       );
 
-      // Esplicitamente convertiamo i risultati in List<Song>
       if (results is List) {
         final albumSongs = results
             .whereType<Song>()

@@ -1,38 +1,44 @@
 import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:flutter/cupertino.dart';
 
-class SongCardSmall extends StatelessWidget {
+enum SongCardSize { big, small }
+
+class SongCard extends StatelessWidget {
   final String imageUrl;
   final String title;
   final String artist;
   final VoidCallback? onTap;
+  final SongCardSize size;
 
-  const SongCardSmall({
+  const SongCard({
     super.key,
     required this.imageUrl,
     required this.title,
     required this.artist,
     this.onTap,
+    this.size = SongCardSize.big,
   });
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
+        final bool isBig = size == SongCardSize.big;
+        
         return GestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: onTap,
           child: Container(
-            padding: const EdgeInsets.all(8),
+            padding: EdgeInsets.all(isBig ? 8 : 8),
             decoration: BoxDecoration(
               color: darkBrown,
-              borderRadius: BorderRadius.circular(8),
-              boxShadow: const [
+              borderRadius: BorderRadius.circular(isBig ? 16 : 8),
+              boxShadow: [
                 BoxShadow(
                   color: darkBrownShadow,
-                  blurRadius: 4,
-                  offset: Offset(4, 4),
-                  spreadRadius: 1,
+                  blurRadius: isBig ? 8 : 4,
+                  offset: Offset(isBig ? 8 : 4, isBig ? 8 : 4),
+                  spreadRadius: isBig ? 2 : 1,
                 )
               ],
             ),
@@ -41,12 +47,12 @@ class SongCardSmall extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: double.infinity,
-                  height: constraints.maxWidth - 16, // Accounting for padding
+                  width: isBig ? 150 : double.infinity,
+                  height: isBig ? 150 : constraints.maxWidth - 16,
                   child: Container(
                     clipBehavior: Clip.antiAlias,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(isBig ? 8 : 4),
                     ),
                     child: Image.network(
                       imageUrl,
@@ -54,7 +60,7 @@ class SongCardSmall extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: isBig ? 16 : 8),
                 Text(
                   title,
                   style: const TextStyle(
@@ -66,7 +72,7 @@ class SongCardSmall extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: isBig ? 8 : 4),
                 Text(
                   artist,
                   style: const TextStyle(

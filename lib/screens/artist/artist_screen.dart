@@ -93,6 +93,7 @@ class ArtistView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    
                     // Artist Name
                     Text(
                       artist.name,

@@ -4,14 +4,12 @@ import 'package:choco_lyrics/screens/favorites/favorites_cubit.dart';
 import 'package:choco_lyrics/screens/favorites/favorites_state.dart';
 import 'package:choco_lyrics/ui/cards/item_card.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:choco_lyrics/screens/favorites/favorite_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:choco_lyrics/data/models/album.dart';
 import 'package:choco_lyrics/data/models/song.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
 import 'package:choco_lyrics/screens/lyrics/lyrics_screen.dart';
-import 'package:choco_lyrics/ui/favorites/favorite_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AlbumScreen extends StatelessWidget {
@@ -70,6 +68,7 @@ class AlbumView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              
               // Album Cover
               AspectRatio(
                 aspectRatio: 1,
@@ -198,7 +197,7 @@ class AlbumView extends StatelessWidget {
                                             _handleFavorite(context, song);
                                           },
                                           isFavorite: favoriteIds
-                                              .contains((song as Song).id),
+                                              .contains((song).id),
                                         ),
                                       );
                                     }),

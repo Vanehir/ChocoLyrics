@@ -43,7 +43,6 @@ class ExploreCubit extends Cubit<ExploreState> {
 
     if (state is ExploreLoaded) {
       final currentState = state as ExploreLoaded;
-      // Prima emettiamo immediatamente il nuovo stato con il filtro aggiornato
       emit(ExploreLoading(activeFilter: filter));
       if (currentState.query.isNotEmpty) {
         searchItems(currentState.query);
