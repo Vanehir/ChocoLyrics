@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:choco_lyrics/screens/favorites/favorite_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -79,7 +81,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
         _isLoading = false;
       });
     } catch (e) {
-      print('Error loading songs: $e');
+      log('Error loading songs: $e');
       setState(() {
         _isLoading = false;
       });
