@@ -34,8 +34,8 @@ class HomeScreenState extends State<HomeScreen> {
       final top50GlobalPlaylist = await spotifyRepository.getPlaylist(idPlaylist: top50GlobalId);
       setState(() {
         // Explicitly cast the dynamic list to List<Song>
-        topHits = (topHitsPlaylist).map((item) => item as Song).toList();
-        top50Global = (top50GlobalPlaylist).map((item) => item as Song).toList();
+        topHits = (topHitsPlaylist).map((item) => item).toList();
+        top50Global = (top50GlobalPlaylist).map((item) => item).toList();
         _isLoading = false;
       });
     } catch (e) {
