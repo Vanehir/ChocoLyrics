@@ -2,7 +2,7 @@
 import 'package:choco_lyrics/data/models/album.dart';
 import 'package:choco_lyrics/data/models/song.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
-import 'package:choco_lyrics/screens/album/album_state';
+import 'package:choco_lyrics/screens/album/album_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AlbumCubit extends Cubit<AlbumState> {

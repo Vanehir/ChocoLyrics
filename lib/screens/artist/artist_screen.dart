@@ -64,6 +64,7 @@ class ArtistView extends StatelessWidget {
         ),
       ),
       child: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,125 +91,127 @@ class ArtistView extends StatelessWidget {
 
               Padding(
                 padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    
-                    // Artist Name
-                    Text(
-                      artist.name,
-                      style: const TextStyle(
-                        color: darkBrown,
-                        fontSize: 24,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-
-                    // Genres
-                    if (artist.genres.isNotEmpty)
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 80),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Artist Name
                       Text(
-                        artist.genres.join(', '),
+                        artist.name,
                         style: const TextStyle(
                           color: darkBrown,
-                          fontSize: 16,
+                          fontSize: 24,
                           fontFamily: 'Roboto',
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    const SizedBox(height: 20),
+                      const SizedBox(height: 8),
 
-                    BlocBuilder<ArtistCubit, ArtistState>(
-                      builder: (context, state) {
-                        return BlocBuilder<FavoritesCubit, FavoritesState>(
-                          builder: (context, favoriteState) {
-                            final favoriteIds = favoriteState is FavoritesLoaded 
-                                ? favoriteState.favoriteIds 
-                                : <String>{};
+                      // Genres
+                      if (artist.genres.isNotEmpty)
+                        Text(
+                          artist.genres.join(', '),
+                          style: const TextStyle(
+                            color: darkBrown,
+                            fontSize: 16,
+                            fontFamily: 'Roboto',
+                          ),
+                        ),
+                      const SizedBox(height: 20),
 
-                            if (state is ArtistLoading) {
-                              return const Center(child: CupertinoActivityIndicator());
-                            }
+                      BlocBuilder<ArtistCubit, ArtistState>(
+                        builder: (context, state) {
+                          return BlocBuilder<FavoritesCubit, FavoritesState>(
+                            builder: (context, favoriteState) {
+                              final favoriteIds = favoriteState is FavoritesLoaded 
+                                  ? favoriteState.favoriteIds 
+                                  : <String>{};
 
-                            if (state is ArtistError) {
-                              return Center(
-                                child: Text(
-                                  state.message,
-                                  style: TextStyle(
-                                    color: darkBrown.withAlpha(179),
-                                    fontSize: 14,
-                                    fontFamily: 'Roboto',
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                ),
-                              );
-                            }
+                              if (state is ArtistLoading) {
+                                return const Center(child: CupertinoActivityIndicator());
+                              }
 
-                            if (state is ArtistLoaded) {
-                              final songs = state.topSongs;
-
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Section Title
-                                  Text(
-                                    "artist.topSongs".tr(
-                                      namedArgs: {
-                                        'maxSongs': songs.length.toString(),
-                                        'artistName': artist.name,
-                                      },
-                                    ),
-                                    style: const TextStyle(
-                                      color: darkBrown,
-                                      fontSize: 20,
+                              if (state is ArtistError) {
+                                return Center(
+                                  child: Text(
+                                    state.message,
+                                    style: TextStyle(
+                                      color: darkBrown.withAlpha(179),
+                                      fontSize: 14,
                                       fontFamily: 'Roboto',
-                                      fontWeight: FontWeight.bold,
+                                      fontStyle: FontStyle.italic,
                                     ),
                                   ),
-                                  const SizedBox(height: 10),
+                                );
+                              }
 
-                                  if (songs.isEmpty)
-                                    Center(
-                                      child: Text(
-                                        'artist.noSongs'.tr(),
-                                        style: TextStyle(
-                                          color: darkBrown.withAlpha(179),
-                                          fontSize: 14,
-                                          fontFamily: 'Roboto',
-                                          fontStyle: FontStyle.italic,
-                                        ),
+                              if (state is ArtistLoaded) {
+                                final songs = state.topSongs;
+
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Section Title
+                                    Text(
+                                      "artist.topSongs".tr(
+                                        namedArgs: {
+                                          'maxSongs': songs.length.toString(),
+                                          'artistName': artist.name,
+                                        },
                                       ),
-                                    )
-                                  else
-                                    ...songs.map((song) {
-                                      return Padding(
-                                        padding: const EdgeInsets.only(bottom: 10.0),
-                                        child: ItemRow(
-                                          item: song,
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              CupertinoPageRoute(
-                                                builder: (context) =>
-                                                    LyricsScreen(song: song),
-                                              ),
-                                            );
-                                          },
-                                          onAddPressed: () => _handleFavorite(context, song),
-                                          isFavorite: favoriteIds.contains(song.id),
-                                        ),
-                                      );
-                                    }),
-                                ],
-                              );
-                            }
+                                      style: const TextStyle(
+                                        color: darkBrown,
+                                        fontSize: 20,
+                                        fontFamily: 'Roboto',
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
 
-                            return const SizedBox.shrink();
-                          },
-                        );
-                      },
-                    ),
-                  ],
+                                    if (songs.isEmpty)
+                                      Center(
+                                        child: Text(
+                                          'artist.noSongs'.tr(),
+                                          style: TextStyle(
+                                            color: darkBrown.withAlpha(179),
+                                            fontSize: 14,
+                                            fontFamily: 'Roboto',
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                        ),
+                                      )
+                                    else
+                                      ...songs.map((song) {
+                                        return Padding(
+                                          padding: const EdgeInsets.only(bottom: 10.0),
+                                          child: ItemRow(
+                                            item: song,
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                CupertinoPageRoute(
+                                                  builder: (context) =>
+                                                      LyricsScreen(song: song),
+                                                ),
+                                              );
+                                            },
+                                            onAddPressed: () => _handleFavorite(context, song),
+                                            isFavorite: favoriteIds.contains(song.id),
+                                          ),
+                                        );
+                                      }),
+                                  ],
+                                );
+                              }
+
+                              return const SizedBox.shrink();
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

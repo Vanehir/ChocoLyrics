@@ -63,7 +63,7 @@ class HomeScreenView extends StatelessWidget {
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.symmetric(vertical: 25)
-                    .copyWith(bottom: 80),
+                    .copyWith(bottom: 100),
                 decoration: const BoxDecoration(color: beige),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
