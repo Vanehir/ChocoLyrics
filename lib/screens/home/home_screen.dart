@@ -69,12 +69,13 @@ class HomeScreenView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     // Home Title
+                    const SizedBox(height: 30),
                     Text(
                       'home.title'.tr(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: darkBrown,
-                        fontSize: 50,
+                        fontSize: 40,
                         fontFamily: 'Calibri',
                         fontWeight: FontWeight.w700,
                         height: 0.46,
@@ -103,7 +104,6 @@ class HomeScreenView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
                     CarouselSlider.builder(
                       itemCount: state.topHits.length,
                       itemBuilder: (context, index, realIndex) {
@@ -141,7 +141,7 @@ class HomeScreenView extends StatelessWidget {
                         padEnds: false,
                       ),
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 20),
                     // Top 50 Global
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
