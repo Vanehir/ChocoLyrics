@@ -6,15 +6,13 @@ import 'package:choco_lyrics/screens/artist/artist_screen.dart';
 import 'package:choco_lyrics/screens/favorites/favorite_screen.dart';
 import 'package:choco_lyrics/screens/lyrics/lyrics_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
-import 'package:choco_lyrics/ui/cards/album_row.dart';
-import 'package:choco_lyrics/ui/cards/artist_row.dart';
+import 'package:choco_lyrics/ui/cards/item_card.dart';
 import 'package:choco_lyrics/ui/favorites/favorite_handler.dart';
 import 'package:choco_lyrics/ui/search/filter_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:choco_lyrics/ui/search/search_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:choco_lyrics/data/models/song.dart';
-import 'package:choco_lyrics/ui/cards/song_row.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({super.key});
@@ -46,20 +44,20 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
 
   Future<void> _handleFavorite(Song song) async {
-  final favorites = await _favoriteHandler.getFavorites();
-  if (favorites.contains(song.id)) {
-    await _favoriteHandler.removeFavorite(song.id);
-    setState(() {
-      _favoriteIds.remove(song.id);
-    });
-  } else {
-    await _favoriteHandler.addFavorite(song.id);
-    setState(() {
-      _favoriteIds.add(song.id);
-    });
+    final favorites = await _favoriteHandler.getFavorites();
+    if (favorites.contains(song.id)) {
+      await _favoriteHandler.removeFavorite(song.id);
+      setState(() {
+        _favoriteIds.remove(song.id);
+      });
+    } else {
+      await _favoriteHandler.addFavorite(song.id);
+      setState(() {
+        _favoriteIds.add(song.id);
+      });
+    }
+    refreshFavorites();
   }
-  refreshFavorites(); // Add this line to trigger refresh
-}
 
   Future<void> _searchItems(String query) async {
     if (query.isEmpty) return;
@@ -67,12 +65,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
     setState(() {
       _isLoading = true;
       _error = null;
-      _items = []; // Clear previous results
+      _items = [];
     });
 
     try {
       final spotifyRepository = SpotifyRepository();
-      print('Searching with filter: ${_activeFilter}');
       final results = await spotifyRepository.getItemFromSearch(
         query: query,
         queryParameter: _activeFilter,
@@ -97,46 +94,35 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
 
   Widget _buildItemRow(dynamic item) {
-    if (item is Song) {
-      return SongRow(
-        song: item,
-        onTap: () {
+    return ItemRow(
+      item: item,
+      onTap: () {
+        if (item is Song) {
           Navigator.push(
             context,
             CupertinoPageRoute(
               builder: (context) => LyricsScreen(song: item),
             ),
           );
-        },
-        onAddPressed: () => _handleFavorite(item),
-        isFavorite: _favoriteIds.contains(item.id),
-      );
-    } else if (item is Album) {
-      return AlbumRow(
-        album: item,
-        onTap: () {
+        } else if (item is Album) {
           Navigator.push(
             context,
             CupertinoPageRoute(
               builder: (context) => AlbumScreen(album: item),
             ),
           );
-        },
-      );
-    } else if (item is Artist) {
-      return ArtistRow(
-        artist: item,
-        onTap: () {
+        } else if (item is Artist) {
           Navigator.push(
             context,
             CupertinoPageRoute(
               builder: (context) => ArtistScreen(artist: item),
             ),
           );
-        },
-      );
-    }
-    return const SizedBox.shrink();
+        }
+      },
+      onAddPressed: item is Song ? () => _handleFavorite(item) : null,
+      isFavorite: item is Song ? _favoriteIds.contains(item.id) : false,
+    );
   }
 
   void _toggleFilter(SpotifySearchType filter) {
