@@ -157,7 +157,12 @@ class _ArtistScreenState extends State<ArtistScreen> {
 
                     // Section Title
                     Text(
-                      "artist.topSongs".tr(),
+                      "artist.topSongs".tr(
+                        namedArgs: {
+                          'maxSongs': _topSongs.length.toString(),
+                          'artistName': widget.artist.name,
+                        },
+                      ),
                       style: TextStyle(
                         color: darkBrown,
                         fontSize: 20,
