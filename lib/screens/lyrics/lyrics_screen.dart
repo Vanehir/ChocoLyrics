@@ -65,6 +65,7 @@ class LyricsView extends StatelessWidget {
                     color: state is LyricsLoaded && state.isScrolled
                         ? beige
                         : darkBrown,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 Text(
