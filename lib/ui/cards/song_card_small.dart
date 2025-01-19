@@ -47,7 +47,7 @@ class SongCardSmall extends StatelessWidget {
                     clipBehavior: Clip.antiAlias,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
-                      color: beige.withOpacity(0.2),
+                      color: beige.withAlpha(51),
                     ),
                     child: imageUrl != null && imageUrl!.isNotEmpty
                         ? Image.network(
@@ -56,7 +56,7 @@ class SongCardSmall extends StatelessWidget {
                             errorBuilder: (context, error, stackTrace) {
                               return Center(
                                 child: Icon(
-                                  CupertinoIcons.music_note, 
+                                  CupertinoIcons.music_note,
                                   color: beige,
                                   size: constraints.maxWidth * 0.3,
                                 ),
@@ -65,7 +65,7 @@ class SongCardSmall extends StatelessWidget {
                           )
                         : Center(
                             child: Icon(
-                              CupertinoIcons.music_note, 
+                              CupertinoIcons.music_note,
                               color: beige,
                               size: constraints.maxWidth * 0.3,
                             ),
@@ -73,7 +73,7 @@ class SongCardSmall extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                
+
                 // Title section
                 Text(
                   title.isNotEmpty ? title : 'Unknown Title',
@@ -87,7 +87,7 @@ class SongCardSmall extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
-                
+
                 // Artist section
                 Text(
                   artist.isNotEmpty ? artist : 'Unknown Artist',

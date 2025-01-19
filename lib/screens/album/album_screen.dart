@@ -60,7 +60,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
   Future<void> _loadSongs() async {
     try {
       final spotifyRepository = SpotifyRepository();
-      final searchQuery = '${widget.album.artists.first.name} ${widget.album.name}';
+      final searchQuery =
+          '${widget.album.artists.first.name} ${widget.album.name}';
       final results = await spotifyRepository.getItemFromSearch(
         query: searchQuery,
         queryParameter: SpotifySearchType.track,
@@ -68,7 +69,8 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
       final albumSongs = results
           .whereType<Song>()
-          .where((song) => song.album.name.toLowerCase() == widget.album.name.toLowerCase())
+          .where((song) =>
+              song.album.name.toLowerCase() == widget.album.name.toLowerCase())
           .toList();
 
       setState(() {
@@ -114,7 +116,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: darkBrown.withOpacity(0.2),
+                        color: darkBrown.withAlpha(51),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
                       ),
@@ -160,7 +162,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                         'foundSongs': _songs.length.toString()
                       }),
                       style: TextStyle(
-                        color: darkBrown.withOpacity(0.7),
+                        color: darkBrown.withAlpha(179),
                         fontSize: 14,
                         fontFamily: 'Roboto',
                       ),
@@ -175,7 +177,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                         child: Text(
                           tr('album.noSongsFound'),
                           style: TextStyle(
-                            color: darkBrown.withOpacity(0.7),
+                            color: darkBrown.withAlpha(179),
                             fontSize: 14,
                             fontFamily: 'Roboto',
                             fontStyle: FontStyle.italic,

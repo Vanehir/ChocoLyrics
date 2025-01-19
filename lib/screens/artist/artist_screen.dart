@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:choco_lyrics/screens/favorites/favorite_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:choco_lyrics/ui/cards/item_card.dart';
@@ -79,7 +81,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
         _isLoading = false;
       });
     } catch (e) {
-      print('Error loading songs: $e');
+      log('Error loading songs: $e');
       setState(() {
         _isLoading = false;
       });
@@ -117,7 +119,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: darkBrown.withOpacity(0.2),
+                        color: darkBrown.withAlpha(51),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
                       ),
@@ -157,7 +159,12 @@ class _ArtistScreenState extends State<ArtistScreen> {
 
                     // Section Title
                     Text(
-                      "Top 10 ${widget.artist.name} tracks", // TODO: Add translation?
+                      "artist.topSongs".tr(
+                        namedArgs: {
+                          'maxSongs': _topSongs.length.toString(),
+                          'artistName': widget.artist.name,
+                        },
+                      ),
                       style: TextStyle(
                         color: darkBrown,
                         fontSize: 20,
@@ -175,7 +182,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
                         child: Text(
                           'artist.noSongs'.tr(),
                           style: TextStyle(
-                            color: darkBrown.withOpacity(0.7),
+                            color: darkBrown.withAlpha(179),
                             fontSize: 14,
                             fontFamily: 'Roboto',
                             fontStyle: FontStyle.italic,

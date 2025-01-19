@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:choco_lyrics/core/storage/secure_storage.dart';
 
@@ -9,9 +10,9 @@ class FavoriteHandler {
 
   Future<List<String>> getFavorites() async {
   final String? stringFavorites = await secureStorage.getItem(key: favoritesKey);
-  print('Raw favorites from storage: $stringFavorites'); // Debug print
+  log('Raw favorites from storage: $stringFavorites'); // Debug print
   final List<dynamic> favorites = jsonDecode(stringFavorites ?? '[]');
-  print('Decoded favorites: $favorites'); // Debug print
+  log('Decoded favorites: $favorites'); // Debug print
   return favorites.cast<String>();
 }
 

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:choco_lyrics/data/models/album.dart';
 import 'package:choco_lyrics/data/models/artist.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
@@ -74,18 +76,18 @@ class _ExploreScreenState extends State<ExploreScreen> {
         query: query,
         queryParameter: _activeFilter,
       );
-      
-      print('Results received: ${results.length}');
+
+      log('Results received: ${results.length}');
       if (results.isNotEmpty) {
-        print('First result type: ${results.first.runtimeType}');
+        log('First result type: ${results.first.runtimeType}');
       }
-      
+
       setState(() {
         _items = results;
         _isLoading = false;
       });
     } catch (e) {
-      print('Search error: $e');
+      log('Search error: $e');
       setState(() {
         _error = 'explore.errorMessage'.tr();
         _isLoading = false;
@@ -147,7 +149,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 color: beige,
                 boxShadow: [
                   BoxShadow(
-                    color: darkBrown.withOpacity(0.15),
+                    color: darkBrown.withAlpha(38),
                     blurRadius: 10,
                     offset: const Offset(0, 6),
                   ),
