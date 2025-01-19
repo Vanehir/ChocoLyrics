@@ -14,30 +14,35 @@ class TabScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoTabScaffold(
-      tabBar: getCustomTabBar(),
-      tabBuilder: (BuildContext context, int index) {
-        return CupertinoTabView(
-          builder: (BuildContext context) {
-            return MultiBlocProvider(
-              providers: [
-                BlocProvider(
-                  create: (context) => FavoritesCubit(
-                    favoriteHandler: FavoriteHandler(),
-                  )..loadFavorites(),
-                ),
-                BlocProvider(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => FavoritesCubit(
+            favoriteHandler: FavoriteHandler(),
+          )..loadFavorites(),
+        ),
+      ],
+      child: CupertinoTabScaffold(
+        tabBar: getCustomTabBar(),
+        tabBuilder: (BuildContext context, int index) {
+          return CupertinoTabView(
+            builder: (BuildContext context) {
+              // Ora forniamo solo l'ExploreCubit qui, perché è specifico per l'ExploreScreen
+              if (index == 1) {
+                // ExploreScreen
+                return BlocProvider(
                   create: (context) => ExploreCubit(
                     spotifyRepository: SpotifyRepository(),
                     favoritesCubit: context.read<FavoritesCubit>(),
                   ),
-                ),
-              ],
-              child: _buildScreen(index),
-            );
-          },
-        );
-      },
+                  child: const ExploreScreen(),
+                );
+              }
+              return _buildScreen(index);
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -46,7 +51,7 @@ class TabScaffold extends StatelessWidget {
       case 0:
         return const HomeScreen();
       case 1:
-        return const ExploreScreen();
+        return const ExploreScreen(); // Non dovrebbe mai essere chiamato
       case 2:
         return const FavoriteScreen();
       default:

@@ -19,7 +19,7 @@ class ExploreCubit extends Cubit<ExploreState> {
   Future<void> searchItems(String query) async {
     if (query.isEmpty) return;
 
-    emit(const ExploreLoading());
+    emit(ExploreLoading(activeFilter: _activeFilter));
 
     try {
       final results = await _spotifyRepository.getItemFromSearch(
@@ -31,17 +31,25 @@ class ExploreCubit extends Cubit<ExploreState> {
         items: results,
         activeFilter: _activeFilter,
         favoriteIds: _favoritesCubit.getFavoriteIds(),
-        query: query, // Aggiungiamo il query qui
+        query: query,
       ));
     } catch (e) {
-      emit(ExploreError('Error during search'));
+      emit(ExploreError('Error during search', activeFilter: _activeFilter));
     }
   }
 
   void toggleFilter(SpotifySearchType filter) {
     _activeFilter = filter;
+
     if (state is ExploreLoaded) {
-      searchItems((state as ExploreLoaded).query);
+      final currentState = state as ExploreLoaded;
+      // Prima emettiamo immediatamente il nuovo stato con il filtro aggiornato
+      emit(ExploreLoading(activeFilter: filter));
+      if (currentState.query.isNotEmpty) {
+        searchItems(currentState.query);
+      }
+    } else {
+      emit(ExploreLoading(activeFilter: filter));
     }
   }
 }

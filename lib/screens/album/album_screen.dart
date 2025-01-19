@@ -54,7 +54,6 @@ class _AlbumScreenState extends State<AlbumScreen> {
         _favoriteIds.add(song.id);
       });
     }
-    refreshFavorites();
   }
 
   Future<void> _loadSongs() async {

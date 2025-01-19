@@ -109,38 +109,37 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   ),
                   const SizedBox(height: 20),
                   BlocBuilder<ExploreCubit, ExploreState>(
-                    buildWhen: (previous, current) => 
-                      previous is ExploreLoaded && current is ExploreLoaded && 
-                      previous.activeFilter != current.activeFilter,
                     builder: (context, state) {
-                      final activeFilter = state is ExploreLoaded 
-                          ? state.activeFilter 
-                          : SpotifySearchType.track;
-                      
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Expanded(
                             child: FilterButton(
                               filterText: 'Track',
-                              isActive: activeFilter == SpotifySearchType.track,
-                              onTap: () => _toggleFilter(SpotifySearchType.track),
+                              isActive:
+                                  state.activeFilter == SpotifySearchType.track,
+                              onTap: () =>
+                                  _toggleFilter(SpotifySearchType.track),
                             ),
                           ),
                           const SizedBox(width: 10),
                           Expanded(
                             child: FilterButton(
                               filterText: 'Album',
-                              isActive: activeFilter == SpotifySearchType.album,
-                              onTap: () => _toggleFilter(SpotifySearchType.album),
+                              isActive:
+                                  state.activeFilter == SpotifySearchType.album,
+                              onTap: () =>
+                                  _toggleFilter(SpotifySearchType.album),
                             ),
                           ),
                           const SizedBox(width: 10),
                           Expanded(
                             child: FilterButton(
                               filterText: 'Artist',
-                              isActive: activeFilter == SpotifySearchType.artist,
-                              onTap: () => _toggleFilter(SpotifySearchType.artist),
+                              isActive: state.activeFilter ==
+                                  SpotifySearchType.artist,
+                              onTap: () =>
+                                  _toggleFilter(SpotifySearchType.artist),
                             ),
                           ),
                         ],
@@ -155,14 +154,15 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 builder: (context, state) {
                   return BlocBuilder<FavoritesCubit, FavoritesState>(
                     builder: (context, favoritesState) {
-                      final favoriteIds = favoritesState is FavoritesLoaded 
-                          ? favoritesState.favoriteIds 
+                      final favoriteIds = favoritesState is FavoritesLoaded
+                          ? favoritesState.favoriteIds
                           : <String>{};
 
                       if (state is ExploreLoading) {
-                        return const Center(child: CupertinoActivityIndicator());
+                        return const Center(
+                            child: CupertinoActivityIndicator());
                       }
-                      
+
                       if (state is ExploreError) {
                         return Center(
                           child: Text(
@@ -174,7 +174,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                           ),
                         );
                       }
-                      
+
                       if (state is ExploreLoaded) {
                         if (state.items.isEmpty) {
                           return Center(
@@ -189,7 +189,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                             ),
                           );
                         }
-                        
+
                         return ListView.builder(
                           padding: const EdgeInsets.only(
                             left: 10,
@@ -208,7 +208,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                           },
                         );
                       }
-                      
+
                       return Center(
                         child: Text(
                           'explore.emptyState.initial'.tr(),

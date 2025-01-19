@@ -57,7 +57,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
         _favoriteIds.add(song.id);
       });
     }
-    refreshFavorites(); // Trigger refresh of favorites
+    // refreshFavorites(); // Trigger refresh of favorites
   }
 
   Future<void> _loadTopSongs() async {

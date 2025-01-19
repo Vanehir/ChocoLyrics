@@ -1,136 +1,84 @@
-import 'dart:async';
 import 'package:choco_lyrics/data/models/song.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
+import 'package:choco_lyrics/screens/favorites/favorites_cubit.dart';
+import 'package:choco_lyrics/screens/favorites/favorites_state.dart';
 import 'package:choco_lyrics/screens/lyrics/lyrics_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
 import 'package:choco_lyrics/ui/cards/item_card.dart';
-import 'package:choco_lyrics/ui/favorites/favorite_handler.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-// Create a stream controller at the global level
-final _favoriteRefreshController = StreamController<void>.broadcast();
-
-// Function to trigger refresh from anywhere in the app
-void refreshFavorites() {
-  _favoriteRefreshController.add(null);
-}
-
-class FavoriteScreen extends StatefulWidget {
+class FavoriteScreen extends StatelessWidget {
   const FavoriteScreen({super.key});
 
   @override
-  State<FavoriteScreen> createState() => _FavoriteScreenState();
-}
-
-class _FavoriteScreenState extends State<FavoriteScreen> {
-  final FavoriteHandler _favoriteHandler = FavoriteHandler();
-  final SpotifyRepository _spotifyRepository = SpotifyRepository();
-  List<Song> _favoriteSongs = [];
-  bool _isLoading = true;
-  StreamSubscription? _refreshSubscription;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadFavorites();
-    
-    // Subscribe to refresh events
-    _refreshSubscription = _favoriteRefreshController.stream.listen((_) {
-      _loadFavorites();
-    });
-  }
-
-  @override
-  void dispose() {
-    _refreshSubscription?.cancel();
-    super.dispose();
-  }
-
-  Future<void> _loadFavorites() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final favoriteIds = await _favoriteHandler.getFavorites();
-      print('Loading favorites: $favoriteIds');
-      
-      if (favoriteIds.isNotEmpty) {
-        final songs = await _spotifyRepository.getSongsById(songIds: favoriteIds);
-        if (mounted) {
-          setState(() {
-            _favoriteSongs = songs;
-            _isLoading = false;
-          });
-        }
-      } else {
-        if (mounted) {
-          setState(() {
-            _favoriteSongs = [];
-            _isLoading = false;
-          });
-        }
-      }
-    } catch (e) {
-      print('Error loading favorites: $e');
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
-  }
-
-  Future<void> _removeFavorite(Song song) async {
-    await _favoriteHandler.removeFavorite(song.id);
-    await _loadFavorites();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    // Carichiamo i preferiti quando la schermata diventa visibile
     return CupertinoPageScaffold(
       backgroundColor: beige,
-      navigationBar: const CupertinoNavigationBar(
-        backgroundColor: beige,
-        border: null
-      ),
-      child: SafeArea(
-        child: _isLoading
-            ? const Center(child: CupertinoActivityIndicator())
-            : _favoriteSongs.isEmpty
-                ? const Center(
-                    child: Text(
-                      'No favorites yet',
-                      style: TextStyle(
-                        color: darkBrown,
-                        fontSize: 16,
-                        fontFamily: 'Roboto',
-                      ),
+      child: BlocBuilder<FavoritesCubit, FavoritesState>(
+        builder: (context, state) {
+          if (state is FavoritesInitial) {
+            // Se siamo nello stato iniziale, carichiamo i preferiti
+            context.read<FavoritesCubit>().loadFavorites();
+            return const Center(child: CupertinoActivityIndicator());
+          }
+
+          if (state is! FavoritesLoaded) {
+            return const Center(child: CupertinoActivityIndicator());
+          }
+
+          return FutureBuilder<List<Song>>(
+            future: SpotifyRepository().getSongsById(
+              songIds: state.favoriteIds.toList(),
+            ),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CupertinoActivityIndicator());
+              }
+
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              }
+
+              final songs = snapshot.data ?? [];
+              if (songs.isEmpty) {
+                return Center(
+                  child: Text('favorites.noSongs'.tr()),
+                );
+              }
+
+              return ListView.builder(
+                padding: const EdgeInsets.all(10),
+                itemCount: songs.length,
+                itemBuilder: (context, index) {
+                  final song = songs[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: ItemRow(
+                      item: song,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => LyricsScreen(song: song),
+                          ),
+                        );
+                      },
+                      onAddPressed: () {
+                        context.read<FavoritesCubit>().toggleFavorite(song.id);
+                      },
+                      isFavorite: true,
                     ),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.all(10),
-                    itemCount: _favoriteSongs.length,
-                    itemBuilder: (context, index) {
-                      final song = _favoriteSongs[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: ItemRow(
-                          item: song,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => LyricsScreen(song: song),
-                              ),
-                            );
-                          },
-                          onAddPressed: () => _removeFavorite(song),
-                          isFavorite: true,
-                        ),
-                      );
-                    },
-                  ),
+                  );
+                },
+              );
+            },
+          );
+        },
       ),
     );
   }
