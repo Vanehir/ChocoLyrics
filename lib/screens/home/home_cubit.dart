@@ -1,4 +1,4 @@
-import 'package:choco_lyrics/cubits/home/home_state.dart';
+import 'package:choco_lyrics/screens/home/home_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_constants.dart';

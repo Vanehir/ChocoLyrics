@@ -1,5 +1,5 @@
-import 'package:choco_lyrics/cubits/home/home_cubit.dart';
-import 'package:choco_lyrics/cubits/home/home_state.dart';
+import 'package:choco_lyrics/screens/home/home_cubit.dart';
+import 'package:choco_lyrics/screens/home/home_state.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
 import 'package:choco_lyrics/screens/lyrics/lyrics_screen.dart';
 import 'package:choco_lyrics/themes/colors/colors.dart';
