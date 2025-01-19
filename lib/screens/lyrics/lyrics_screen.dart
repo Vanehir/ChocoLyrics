@@ -107,7 +107,7 @@ class _LyricsScreenState extends State<LyricsScreen> {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w400,
-                color: _isScrolled ? beige.withOpacity(0.7) : darkBrownShadow,
+                color: _isScrolled ? beige.withAlpha(179) : darkBrownShadow,
               ),
             ),
           ],

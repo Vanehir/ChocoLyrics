@@ -46,20 +46,20 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
 
   Future<void> _handleFavorite(Song song) async {
-  final favorites = await _favoriteHandler.getFavorites();
-  if (favorites.contains(song.id)) {
-    await _favoriteHandler.removeFavorite(song.id);
-    setState(() {
-      _favoriteIds.remove(song.id);
-    });
-  } else {
-    await _favoriteHandler.addFavorite(song.id);
-    setState(() {
-      _favoriteIds.add(song.id);
-    });
+    final favorites = await _favoriteHandler.getFavorites();
+    if (favorites.contains(song.id)) {
+      await _favoriteHandler.removeFavorite(song.id);
+      setState(() {
+        _favoriteIds.remove(song.id);
+      });
+    } else {
+      await _favoriteHandler.addFavorite(song.id);
+      setState(() {
+        _favoriteIds.add(song.id);
+      });
+    }
+    refreshFavorites(); // Add this line to trigger refresh
   }
-  refreshFavorites(); // Add this line to trigger refresh
-}
 
   Future<void> _searchItems(String query) async {
     if (query.isEmpty) return;
@@ -77,12 +77,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
         query: query,
         queryParameter: _activeFilter,
       );
-      
+
       print('Results received: ${results.length}');
       if (results.isNotEmpty) {
         print('First result type: ${results.first.runtimeType}');
       }
-      
+
       setState(() {
         _items = results;
         _isLoading = false;
@@ -161,7 +161,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 color: beige,
                 boxShadow: [
                   BoxShadow(
-                    color: darkBrown.withOpacity(0.15),
+                    color: darkBrown.withAlpha(38),
                     blurRadius: 10,
                     offset: const Offset(0, 6),
                   ),

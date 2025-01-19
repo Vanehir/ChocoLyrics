@@ -117,7 +117,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: darkBrown.withOpacity(0.2),
+                        color: darkBrown.withAlpha(51),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
                       ),
@@ -175,7 +175,7 @@ class _ArtistScreenState extends State<ArtistScreen> {
                         child: Text(
                           'artist.noSongs'.tr(),
                           style: TextStyle(
-                            color: darkBrown.withOpacity(0.7),
+                            color: darkBrown.withAlpha(179),
                             fontSize: 14,
                             fontFamily: 'Roboto',
                             fontStyle: FontStyle.italic,
