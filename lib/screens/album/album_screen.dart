@@ -1,3 +1,7 @@
+import 'package:choco_lyrics/screens/album/album_cubit.dart';
+import 'package:choco_lyrics/screens/album/album_state';
+import 'package:choco_lyrics/screens/favorites/favorites_cubit.dart';
+import 'package:choco_lyrics/screens/favorites/favorites_state.dart';
 import 'package:choco_lyrics/ui/cards/item_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:choco_lyrics/screens/favorites/favorite_screen.dart';
@@ -8,8 +12,9 @@ import 'package:choco_lyrics/data/models/song.dart';
 import 'package:choco_lyrics/data/repositories/spotify/spotify_repository.dart';
 import 'package:choco_lyrics/screens/lyrics/lyrics_screen.dart';
 import 'package:choco_lyrics/ui/favorites/favorite_handler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AlbumScreen extends StatefulWidget {
+class AlbumScreen extends StatelessWidget {
   final Album album;
 
   const AlbumScreen({
@@ -18,70 +23,31 @@ class AlbumScreen extends StatefulWidget {
   });
 
   @override
-  State<AlbumScreen> createState() => _AlbumScreenState();
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => AlbumCubit(
+            spotifyRepository: SpotifyRepository(),
+            album: album,
+          )..loadSongs(),
+        ),
+      ],
+      child: AlbumView(album: album),
+    );
+  }
 }
 
-class _AlbumScreenState extends State<AlbumScreen> {
-  List<Song> _songs = [];
-  bool _isLoading = true;
-  final FavoriteHandler _favoriteHandler = FavoriteHandler();
-  Set<String> _favoriteIds = {};
+class AlbumView extends StatelessWidget {
+  final Album album;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadSongs();
-    _loadFavoriteIds();
-  }
+  const AlbumView({
+    super.key,
+    required this.album,
+  });
 
-  Future<void> _loadFavoriteIds() async {
-    final favorites = await _favoriteHandler.getFavorites();
-    setState(() {
-      _favoriteIds = favorites.toSet();
-    });
-  }
-
-  Future<void> _handleFavorite(Song song) async {
-    final favorites = await _favoriteHandler.getFavorites();
-    if (favorites.contains(song.id)) {
-      await _favoriteHandler.removeFavorite(song.id);
-      setState(() {
-        _favoriteIds.remove(song.id);
-      });
-    } else {
-      await _favoriteHandler.addFavorite(song.id);
-      setState(() {
-        _favoriteIds.add(song.id);
-      });
-    }
-  }
-
-  Future<void> _loadSongs() async {
-    try {
-      final spotifyRepository = SpotifyRepository();
-      final searchQuery =
-          '${widget.album.artists.first.name} ${widget.album.name}';
-      final results = await spotifyRepository.getItemFromSearch(
-        query: searchQuery,
-        queryParameter: SpotifySearchType.track,
-      );
-
-      final albumSongs = results
-          .whereType<Song>()
-          .where((song) =>
-              song.album.name.toLowerCase() == widget.album.name.toLowerCase())
-          .toList();
-
-      setState(() {
-        _songs = albumSongs;
-        _isLoading = false;
-      });
-    } catch (e) {
-      print('Error loading songs: $e');
-      setState(() {
-        _isLoading = false;
-      });
-    }
+  void _handleFavorite(BuildContext context, Song song) {
+    context.read<FavoritesCubit>().toggleFavorite(song.id);
   }
 
   @override
@@ -110,7 +76,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                 child: Container(
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(widget.album.coverUrl),
+                      image: NetworkImage(album.coverUrl),
                       fit: BoxFit.cover,
                     ),
                     boxShadow: [
@@ -131,7 +97,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
                   children: [
                     // Album Title
                     Text(
-                      widget.album.name,
+                      album.name,
                       style: const TextStyle(
                         color: darkBrown,
                         fontSize: 24,
@@ -143,9 +109,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
                     // Artists
                     Text(
-                      widget.album.artists
-                          .map((artist) => artist.name)
-                          .join(', '),
+                      album.artists.map((artist) => artist.name).join(', '),
                       style: const TextStyle(
                         color: darkBrown,
                         fontSize: 16,
@@ -154,63 +118,99 @@ class _AlbumScreenState extends State<AlbumScreen> {
                     ),
                     const SizedBox(height: 4),
 
-                    // Total Tracks
-                    Text(
-                      tr('album.totTracks', namedArgs: {
-                        'totalTracks': widget.album.totalTracks.toString(),
-                        'foundSongs': _songs.length.toString()
-                      }),
-                      style: TextStyle(
-                        color: darkBrown.withAlpha(179),
-                        fontSize: 14,
-                        fontFamily: 'Roboto',
-                      ),
-                    ),
-                    const SizedBox(height: 20),
+                    BlocBuilder<AlbumCubit, AlbumState>(
+                      builder: (context, state) {
+                        return BlocBuilder<FavoritesCubit, FavoritesState>(
+                          builder: (context, favoriteState) {
+                            final favoriteIds = favoriteState is FavoritesLoaded
+                                ? favoriteState.favoriteIds
+                                : <String>{};
 
-                    // Songs List
-                    if (_isLoading)
-                      const Center(child: CupertinoActivityIndicator())
-                    else if (_songs.isEmpty)
-                      Center(
-                        child: Text(
-                          tr('album.noSongsFound'),
-                          style: TextStyle(
-                            color: darkBrown.withAlpha(179),
-                            fontSize: 14,
-                            fontFamily: 'Roboto',
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      )
-                    else
-                      ..._songs.asMap().entries.map((entry) {
-                        final song = entry.value;
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: Row(
-                            children: [
-                              // Song Row
-                              Expanded(
-                                child: ItemRow(
-                                  item: song,
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      CupertinoPageRoute(
-                                        builder: (context) =>
-                                            LyricsScreen(song: song),
-                                      ),
-                                    );
-                                  },
-                                  onAddPressed: () => _handleFavorite(song),
-                                  isFavorite: _favoriteIds.contains(song.id),
+                            if (state is AlbumLoading) {
+                              return const Center(
+                                  child: CupertinoActivityIndicator());
+                            }
+
+                            if (state is AlbumError) {
+                              return Center(
+                                child: Text(
+                                  state.message,
+                                  style: TextStyle(
+                                    color: darkBrown.withAlpha(179),
+                                    fontSize: 14,
+                                    fontFamily: 'Roboto',
+                                    fontStyle: FontStyle.italic,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              );
+                            }
+
+                            if (state is AlbumLoaded) {
+                              final songs = state.songs;
+
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    tr('album.totTracks', namedArgs: {
+                                      'totalTracks':
+                                          album.totalTracks.toString(),
+                                      'foundSongs': songs.length.toString()
+                                    }),
+                                    style: TextStyle(
+                                      color: darkBrown.withAlpha(179),
+                                      fontSize: 14,
+                                      fontFamily: 'Roboto',
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  if (songs.isEmpty)
+                                    Center(
+                                      child: Text(
+                                        tr('album.noSongsFound'),
+                                        style: TextStyle(
+                                          color: darkBrown.withAlpha(179),
+                                          fontSize: 14,
+                                          fontFamily: 'Roboto',
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
+                                    )
+                                  else
+                                    ...songs
+                                        .where((song) => song != null)
+                                        .map((song) {
+                                      return Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 10.0),
+                                        child: ItemRow(
+                                          item: song,
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              CupertinoPageRoute(
+                                                builder: (context) =>
+                                                    LyricsScreen(song: song),
+                                              ),
+                                            );
+                                          },
+                                          onAddPressed: () {
+                                            _handleFavorite(context, song);
+                                          },
+                                          isFavorite: favoriteIds
+                                              .contains((song as Song).id),
+                                        ),
+                                      );
+                                    }),
+                                ],
+                              );
+                            }
+
+                            return const SizedBox.shrink();
+                          },
                         );
-                      }),
+                      },
+                    ),
                   ],
                 ),
               ),
