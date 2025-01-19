@@ -26,5 +26,9 @@
   "artist": {
     "topSongs": "Top {maxSongs} {artistName} songs",
     "noSongsFound": "No songs found"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "noSongs": "Your favorite songs will appear here"
   }
 }

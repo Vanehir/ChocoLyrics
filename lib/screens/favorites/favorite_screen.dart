@@ -71,7 +71,7 @@ class FavoriteScreen extends StatelessWidget {
                         padding: const EdgeInsets.only(
                           left: 10,
                           right: 10,
-                          bottom: 100, // Per non nascondersi sotto la navbar
+                          bottom: 100,
                         ),
                         itemCount: songs.length,
                         itemBuilder: (context, index) {
