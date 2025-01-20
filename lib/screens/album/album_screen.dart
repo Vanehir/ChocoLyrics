@@ -65,9 +65,9 @@ class AlbumView extends StatelessWidget {
       ),
       child: SafeArea(
         bottom: false,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 80.0),
-          child: SingleChildScrollView(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 80.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -123,9 +123,10 @@ class AlbumView extends StatelessWidget {
                         builder: (context, state) {
                           return BlocBuilder<FavoritesCubit, FavoritesState>(
                             builder: (context, favoriteState) {
-                              final favoriteIds = favoriteState is FavoritesLoaded
-                                  ? favoriteState.favoriteIds
-                                  : <String>{};
+                              final favoriteIds =
+                                  favoriteState is FavoritesLoaded
+                                      ? favoriteState.favoriteIds
+                                      : <String>{};
 
                               if (state is AlbumLoading) {
                                 return const Center(
@@ -182,8 +183,8 @@ class AlbumView extends StatelessWidget {
                                           .where((song) => song != null)
                                           .map((song) {
                                         return Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 10.0),
+                                          padding: const EdgeInsets.only(
+                                              bottom: 10.0),
                                           child: ItemRow(
                                             item: song,
                                             onTap: () {
@@ -198,8 +199,8 @@ class AlbumView extends StatelessWidget {
                                             onAddPressed: () {
                                               _handleFavorite(context, song);
                                             },
-                                            isFavorite: favoriteIds
-                                                .contains((song).id),
+                                            isFavorite:
+                                                favoriteIds.contains((song).id),
                                           ),
                                         );
                                       }),

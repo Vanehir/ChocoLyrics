@@ -26,6 +26,7 @@ class GetSpotifyAccessToken {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Authorization':
+          // REQUIRES spotify_keys.dart FILE, NOT INCLUDED ON GITHUB //
               'Basic ${base64EncodeString('$clientId:$clientSecret')}',
         },
       ),
